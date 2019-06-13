@@ -1,5 +1,3 @@
-# server <- "http://testpaleodb.geology.wisc.edu/data1.2/"
-# server <- "http://paleobiodb.org/data1.1/"
 server <- "https://paleobiodb.org/data1.2/"
 # tax.out <- read.csv(URLencode(paste0("https://paleobiodb.org/data1.2/taxa/list.csv?taxon_name=", paste(gsub(pattern=" ", replacement="%20", x=tax.vec[119]), collapse=","), "&rel=current")))
 # tax.out <- fromJSON(URLencode(paste0("https://paleobiodb.org/data1.2/taxa/list.json?taxon_name=", paste(gsub(pattern=" ", replacement="%20", x=tax.vec[43]), collapse=","), "&rel=current")))
@@ -37,7 +35,7 @@ getOneCurrentTaxon <- function(this.taxon, only.taxon_no = FALSE) {
 	} else NA
 }
 
-getCurrentTaxa <- function(tax.vec, only.taxon_no=FALSE) { #, do.parallel=FALSE
+getCurrentTaxa <- function(tax.vec, show.progress=TRUE, only.taxon_no=FALSE) { #, do.parallel=FALSE
 	# if (m <- GET(url=server) {
 		# print("*** Cannot connect ***")
 		# return()
@@ -46,8 +44,14 @@ getCurrentTaxa <- function(tax.vec, only.taxon_no=FALSE) { #, do.parallel=FALSE
 
 	# if (do.parallel) { name.mat <- cbind(input=tax.vec.short, output=simplify2array(mclapply(tax.vec.short, getOneCurrentTaxon, only.taxon_no=only.taxon_no, mc.cores=detectCores()-2), higher=FALSE))
 	# } else 
-	output <- sapply(tax.vec.short, getOneCurrentTaxon, only.taxon_no=only.taxon_no)
+	# output <- sapply(tax.vec.short, getOneCurrentTaxon, only.taxon_no=only.taxon_no)
+	output <- vector()
+	for (i in seq_along(tax.vec.short)) {
+		if (show.progress) cat("\t**** Getting current taxon from PaleoBioDB\t", i, " of ", length(tax.vec.short), " (", round(i/length(tax.vec.short)*100, 1), "%)\r", sep="")
+		output <- c(output, getOneCurrentTaxon(this.taxon=tax.vec.short[i], only.taxon_no=only.taxon_no))
+	}
 	# for (this.taxon in tax.vec.short) getOneCurrentTaxon(this.taxon)
+	if (show.progress) print("")
 	name.mat <- cbind(input=tax.vec.short, output=output)
 	if (!only.taxon_no) factor(name.mat[match(tax.vec, name.mat[,"input"]),"output"]) else as.numeric(name.mat[match(tax.vec, name.mat[,"input"]),"output"])
 	# for (i in seq_along(tax.vec)) getOneCurrentTaxon(tax.vec[i])
