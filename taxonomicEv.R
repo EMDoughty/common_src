@@ -188,47 +188,72 @@ getRichnessMatrixFromOccs <- function(this.occs, intervals, occs.column.higher="
 		prop
 }
 
-plotStackedRichness <- function(this.box, intervals, do.log=FALSE, overlay.labels=FALSE, numbers.only=TRUE, legend=TRUE, xlim=NULL) {
-	# this.box <-this.box[,order(this.box[nrow(this.box)-1,], decreasing=TRUE)]
-	# this.box <-this.box[,order(colMeans(this.box, na.rm=TRUE))]
-	thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE) 
-	# if (do. this.box) { thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE) 
-	# } else thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE)
-	this.box <- this.box[,match(names(thisOrder), colnames(this.box))]
-	this.box[!is.finite(this.box)] <- 0
-	for (i in 2:ncol(this.box)) this.box[,i] <- this.box[,i] + this.box[,i-1]
-
-	this.colors<-rainbow(ncol(this.box))
-	this.fills<-rainbow(ncol(this.box), alpha=0.50)
-	if (all(rowSums(prop) == 1, na.rm=TRUE)) {
-		y_lim<-c(0,1) 
-		y_lab<-"Proportion of Subtaxa"
-	} else {
-		if (do.log) y_lim <- c(min(this.box[this.box[] > 0], na.rm=TRUE), 1.05*max(this.box, na.rm=TRUE)) else y_lim<-c(0, max(this.box))
-		y_lab<-"Richness (Number of Subtaxa)"
-	}
-
-	if (is.null(xlim)) { plot(rowMeans(intervals), this.box[,1], xlim=c(max(rowMeans(intervals)), min(rowMeans(intervals))), ylim=y_lim, type="n", usr=c(max(rowMeans(intervals), min(rowMeans(intervals)), 0, 1)), xaxs="i", yaxs="i", xlab="Time (Ma)", ylab=y_lab)
-	} else plot(rowMeans(intervals), this.box[,1], xlim=xlim, ylim=y_lim, type="n", xlab="Time (Ma)", ylab=y_lab)
-	overlayCzTimescale(do.subepochs=FALSE)
-	polygon(c(rowMeans(intervals), rev(rowMeans(intervals))), c(this.box[,1], rep(0, nrow(intervals))), col=this.fills[1], border="gray33", xlab="Time (Ma)", ylab="Proportion of Taxa", lwd=0.5)
-	for (i in 2:ncol(this.box)) polygon(c(rowMeans(intervals), rev(rowMeans(intervals))), c(this.box[,i], this.box[nrow(intervals):1,i-1]), col=this.fills[i], border="gray33", lwd=0.5)
-	
-	if (overlay.labels) {
-		if (numbers.only) {
-			translation.table <- cbind(names(thisOrder), seq_along(colnames(prop)))
-			this.labels <- translation.table[,2]
-		} else this.labels <- colnames(this.box)
-		text(rowMeans(intervals)[thisOrder[1]], this.box[thisOrder[1],1]/2, labels=this.labels[1], adj=(0-(rowMeans(intervals)[thisOrder[1]]-par()$usr[1])/(par()$usr[1]-par()$usr[2])), col="white", cex=0.5, font=2)
-		for (i in 2:ncol(this.box)) {
-			text(rowMeans(intervals)[thisOrder[i]], mean(c(this.box[thisOrder[i],i], this.box[thisOrder[i],i-1])), adj=(0-(rowMeans(intervals)[thisOrder[i]]-par()$usr[1])/(par()$usr[1]-par()$usr[2])), labels=this.labels[i], col="white", cex=0.5, font=2)
-		}
-	}
-	
-	if (legend) {
-		legend("topleft", legend=rev(colnames(this.box)), inset=0.055, fill=NA, border=NA, cex=0.5, box.lty=0, bg=rgb(0,0,0,0.5)) #this is the dropshadow on the legend
-		legend("topleft", legend=rev(colnames(this.box)), inset=0.05, fill=this.fills[ncol(this.box):1], border=this.colors[ncol(this.box):1], cex=0.5, bg="white")
-	}
-	if (numbers.only) translation.table
+plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log = FALSE, xlim = NULL, ylim = NULL, 
+                                xaxp = NULL, yaxp = NULL, cex.axis = 1, cex.lab = 1, las = 0, plot.adj = NULL, 
+                                col.axis = "black", col.lab = "black", 
+                                xaxt = NULL, yaxt = NULL, 
+                                ylab = "Richness (Number of Subtaxa)", xlab = "Time (Ma)",
+                                add.legend = TRUE, prop.ylab = FALSE,
+                                numbers.only = FALSE, overlay.labels = FALSE, overlay.color = TRUE, do.subepochs = FALSE, thisAlpha.text = 0.33, thisAlpha.intervals = 0.33, borderCol = "white", invertTime = FALSE, scale.cex = 0.75, scale.headers = 0.95, text.offset = 0.025) 
+{
+  # this.box <-this.box[,order(this.box[nrow(this.box)-1,], decreasing=TRUE)]
+  # this.box <-this.box[,order(colMeans(this.box, na.rm=TRUE))]
+  thisOrder <- apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE))))
+  if (reorder.taxa) thisOrder <- sort(thisOrder, decreasing=TRUE)
+  # if (do. this.box) { thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE) 
+  # } else thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE)
+  this.box <- this.box[,match(names(thisOrder), colnames(this.box))]
+  this.box[!is.finite(this.box)] <- 0
+  for (i in 2:ncol(this.box)) this.box[,i] <- this.box[,i] + this.box[,i-1]
+  
+  this.colors<-rainbow(ncol(this.box))
+  this.fills<-rainbow(ncol(this.box), alpha=0.50)
+ 
+#   if(ylab)
+#  {
+    if (all(rowSums(this.box) == 1, na.rm=TRUE) | prop.ylab) 
+    {  #changed prop to this.box in this line
+      if(!is.null(ylim)) {y_lim <- ylim
+      } else y_lim <- c(0,1)
+#      y_lab<-"Proportion of Subtaxa"
+    } else {
+      if (do.log) y_lim <- c(min(this.box[this.box[] > 0], na.rm=TRUE), 1.05*max(this.box, na.rm=TRUE)) else y_lim<-c(0, max(this.box))
+      if(!is.null(ylim)) y_lim <- ylim
+#      y_lab<-"Richness (Number of Subtaxa)"
+    }
+#  } 
+  
+  if (is.null(xlim)) { plot(rowMeans(intervals), this.box[,1], xlim=c(max(rowMeans(intervals)), min(rowMeans(intervals))), 
+                            ylim=y_lim, xaxp= xaxp, yaxp= yaxp, type="n", xaxt = xaxt, yaxt = yaxt, las = las,
+                            usr=c(max(rowMeans(intervals), min(rowMeans(intervals)), 0, 1)), 
+                            xaxs="i", yaxs="i", xlab = x_lab, ylab = ylab, 
+                            col.axis = col.axis, col.lab = col.lab, cex.axis = cex.axis, cex.lab = cex.lab, adj = plot.adj)
+  } else plot(rowMeans(intervals), this.box[,1], xlim= xlim, ylim= y_lim, xaxp= xaxp, yaxp= yaxp, las = las, type="n", 
+              xaxt = xaxt, yaxt = yaxt, xlab = xlab, ylab = ylab, col.axis = col.axis, col.lab = col.lab, cex.axis = cex.axis, cex.lab = cex.lab, adj = plot.adj)
+  
+  overlayCzTimescale(do.subepochs=do.subepochs, color = overlay.color, thisAlpha.text = thisAlpha.text, thisAlpha.intervals = thisAlpha.intervals, borderCol = borderCol, invertTime = invertTime, scale.cex = scale.cex, scale.headers = scale.headers, text.offset = text.offset)
+  
+  polygon(c(rowMeans(intervals), rev(rowMeans(intervals))), c(this.box[,1], rep(0, nrow(intervals))), col=this.fills[1], border="gray33", xlab="Time (Ma)", ylab="Proportion of Taxa", lwd=0.5)
+  for (i in 2:ncol(this.box)) polygon(c(rowMeans(intervals), rev(rowMeans(intervals))), c(this.box[,i], this.box[nrow(intervals):1,i-1]), col=this.fills[i], border="gray33", lwd=0.5)
+  
+  if (overlay.labels) 
+  {
+    if (numbers.only) 
+    {
+      translation.table <- cbind(names(thisOrder), seq_along(colnames(prop)))
+      this.labels <- translation.table[,2]
+    } else this.labels <- colnames(this.box)
+    text(rowMeans(intervals)[thisOrder[1]], this.box[thisOrder[1],1]/2, labels=this.labels[1], adj=(0-(rowMeans(intervals)[thisOrder[1]]-par()$usr[1])/(par()$usr[1]-par()$usr[2])), col="white", cex=0.5, font=2)
+    for (i in 2:ncol(this.box)) 
+    {
+      text(rowMeans(intervals)[thisOrder[i]], mean(c(this.box[thisOrder[i],i], this.box[thisOrder[i],i-1])), adj=(0-(rowMeans(intervals)[thisOrder[i]]-par()$usr[1])/(par()$usr[1]-par()$usr[2])), labels=this.labels[i], col="white", cex=0.5, font=2)
+    }
+  }
+  
+  if (add.legend) 
+  {
+    legend("topleft", legend=rev(colnames(this.box)), inset=0.055, fill=NA, border=NA, cex=0.5, box.lty=0, bg=rgb(0,0,0,0.5)) #this is the dropshadow on the legend
+    legend("topleft", legend=rev(colnames(this.box)), inset=0.05, fill=this.fills[ncol(this.box):1], border=this.colors[ncol(this.box):1], cex=0.5, bg="white")
+  }
+  if (numbers.only) {translation.table}
 }
-
