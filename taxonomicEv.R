@@ -198,7 +198,7 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
 {
   # this.box <-this.box[,order(this.box[nrow(this.box)-1,], decreasing=TRUE)]
   # this.box <-this.box[,order(colMeans(this.box, na.rm=TRUE))]
-  thisOrder <- apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE))))
+  thisOrder <- apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))) #what does this line do? why?
   if (reorder.taxa) thisOrder <- sort(thisOrder, decreasing=TRUE)
   # if (do. this.box) { thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE) 
   # } else thisOrder <- sort(apply(this.box, 2, function(x) max(which(x==max(x, na.rm=TRUE)))), decreasing=TRUE)

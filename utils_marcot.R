@@ -14,6 +14,12 @@ listifyMatrixByColumn <- function(m, do.parallel=FALSE) {
 	} else lapply(as.data.frame(m), function(x) x)
 }
 
+makeMatrixFromList <- function(this.list) {
+  m <- this.list[[1]]
+  for (i in seq(from=2, to=length(this.list))) m <- merge(m, this.list[[i]], all=TRUE, sort=FALSE)
+  m
+}
+
 alphaColor <- function(color, alpha) {
 	sapply(color, function(color) rgb(col2rgb(color)[1], col2rgb(color)[2], col2rgb(color)[3], alpha*255, maxColorValue=255))
 }
