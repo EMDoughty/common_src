@@ -20,41 +20,36 @@ getStuffWithoutWarnings <- function(this.URL) {
 	dat
 }
 
-getOneCurrentTaxon <- function(this.taxon, only.taxon_no = FALSE) {
-	this.taxon <- as.character(this.taxon)
-	if (!is.na(this.taxon) & this.taxon != "") {
-		if (grepl(pattern="[[:punct:]]", x=this.taxon) | grepl(pattern="indet", x=this.taxon)) return (this.taxon)
-		this.URL <- URLencode(paste0(server, "taxa/single.csv?name=", this.taxon))
-		this.names <- getStuffWithoutWarnings(this.URL)
-		if (is.null(this.names$taxon_name)) {
-			warning(paste0("The taxon \"", this.taxon, "\" cannot be found in the Paleobiology Database"), call.=FALSE)
-			return(paste0("\"",this.taxon,"\""))
-		} else {
-			if (only.taxon_no) this.names$accepted_no else as.character(this.names$accepted_name)
-		}
-	} else NA
+getOneCurrentTaxon <- function(this.taxon, only.taxon_no = FALSE, keep.changed.rank=TRUE) {
+  this.taxon <- as.character(this.taxon)
+  if (!is.na(this.taxon) & this.taxon != "") {
+    if (grepl(pattern=" sp.", x=this.taxon)) this.taxon <- gsub(pattern=" sp.", replacement="", x=this.taxon)
+    if (grepl(pattern=" indet.", x=this.taxon)) this.taxon <- gsub(pattern=" indet.", replacement="", x=this.taxon)		# return (this.taxon)	# if this.taxon has punctuation (e.g., "Equus sp.") or "indet", then just return this.taxon
+    this.URL <- URLencode(paste0(server, "taxa/single.csv?name=", this.taxon))
+    this.names <- getStuffWithoutWarnings(this.URL)
+    if (is.null(this.names$taxon_name)) {
+      warning(paste0("The taxon \"", this.taxon, "\" cannot be found in the Paleobiology Database"), call.=FALSE)
+      return(paste0("\"",this.taxon,"\""))
+    } else {
+      if (this.names$accepted_rank != this.names$taxon_rank & !keep.changed.rank) {
+        warning(paste0("The rank taxon \"", this.taxon, "\" has been changed from ", this.names$taxon_rank," to ", this.names$accepted_rank, " (", this.names$accepted_name,")"), call.=FALSE)
+        return(paste0("\"",this.taxon,"\""))
+      } else if (only.taxon_no) this.names$accepted_no else as.character(this.names$accepted_name)
+    }
+  } else NA
 }
 
-getCurrentTaxa <- function(tax.vec, show.progress=TRUE, only.taxon_no=FALSE) { #, do.parallel=FALSE
-	# if (m <- GET(url=server) {
-		# print("*** Cannot connect ***")
-		# return()
-	# }
-	tax.vec.short <- unique(as.character(tax.vec))
-
-	# if (do.parallel) { name.mat <- cbind(input=tax.vec.short, output=simplify2array(mclapply(tax.vec.short, getOneCurrentTaxon, only.taxon_no=only.taxon_no, mc.cores=detectCores()-2), higher=FALSE))
-	# } else 
-	# output <- sapply(tax.vec.short, getOneCurrentTaxon, only.taxon_no=only.taxon_no)
-	output <- vector()
-	for (i in seq_along(tax.vec.short)) {
-		if (show.progress) cat("\t**** Getting current taxon from PaleoBioDB\t", i, " of ", length(tax.vec.short), " (", round(i/length(tax.vec.short)*100, 1), "%)\r", sep="")
-		output <- c(output, getOneCurrentTaxon(this.taxon=tax.vec.short[i], only.taxon_no=only.taxon_no))
-	}
-	# for (this.taxon in tax.vec.short) getOneCurrentTaxon(this.taxon)
-	if (show.progress) print("")
-	name.mat <- cbind(input=tax.vec.short, output=output)
-	if (!only.taxon_no) factor(name.mat[match(tax.vec, name.mat[,"input"]),"output"]) else as.numeric(name.mat[match(tax.vec, name.mat[,"input"]),"output"])
-	# for (i in seq_along(tax.vec)) getOneCurrentTaxon(tax.vec[i])
+getCurrentTaxa <- function(tax.vec, show.progress=TRUE, only.taxon_no=FALSE, keep.changed.rank=TRUE) { #, do.parallel=FALSE
+  tax.vec.short <- unique(as.character(tax.vec))
+  
+  output <- vector()
+  for (i in seq_along(tax.vec.short)) {
+    if (show.progress) cat("\t**** Getting current taxon from PaleoBioDB\t", i, " of ", length(tax.vec.short), " (", round(i/length(tax.vec.short)*100, 1), "%)\r", sep="")
+    output <- c(output, getOneCurrentTaxon(this.taxon=tax.vec.short[i], only.taxon_no=only.taxon_no, keep.changed.rank=keep.changed.rank))
+  }
+  if (show.progress) print("")
+  name.mat <- cbind(input=tax.vec.short, output=output)
+  if (!only.taxon_no) factor(name.mat[match(tax.vec, name.mat[,"input"]),"output"]) else as.numeric(name.mat[match(tax.vec, name.mat[,"input"]),"output"])
 }
 
 

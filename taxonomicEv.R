@@ -190,7 +190,7 @@ getRichnessMatrixFromOccs <- function(this.occs, intervals, occs.column.higher="
 
 plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log = FALSE, xlim = NULL, ylim = NULL, 
                                 xaxp = NULL, yaxp = NULL, cex.axis = 1, cex.lab = 1, las = 0, plot.adj = NULL, 
-                                col.axis = "black", col.lab = "black", 
+                                col.axis = "black", col.lab = "black", poly.col = NULL,
                                 xaxt = NULL, yaxt = NULL, 
                                 ylab = "Richness (Number of Subtaxa)", xlab = "Time (Ma)",
                                 add.legend = TRUE, prop.ylab = FALSE,
@@ -206,9 +206,14 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
   this.box[!is.finite(this.box)] <- 0
   for (i in 2:ncol(this.box)) this.box[,i] <- this.box[,i] + this.box[,i-1]
   
-  this.colors<-rainbow(ncol(this.box))
-  this.fills<-rainbow(ncol(this.box), alpha=0.50)
- 
+  if(!is.null(poly.col) & is.character(poly.col))
+  {
+    this.colors <- poly.col
+    this.fills <-alphaColor(poly.col, alpha = 0.5)
+  } else {
+    this.colors <-rainbow(ncol(this.box))
+    this.fills <-rainbow(ncol(this.box), alpha=0.50)
+  }
 #   if(ylab)
 #  {
     if (all(rowSums(this.box) == 1, na.rm=TRUE) | prop.ylab) 
