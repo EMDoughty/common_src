@@ -23,8 +23,8 @@ getStuffWithoutWarnings <- function(this.URL) {
 getOneCurrentTaxon <- function(this.taxon, only.taxon_no = FALSE, keep.changed.rank=TRUE) {
   this.taxon <- as.character(this.taxon)
   if (!is.na(this.taxon) & this.taxon != "") {
-    if (grepl(pattern=" sp.", x=this.taxon)) this.taxon <- gsub(pattern=" sp.", replacement="", x=this.taxon)
-    if (grepl(pattern=" indet.", x=this.taxon)) this.taxon <- gsub(pattern=" indet.", replacement="", x=this.taxon)		# return (this.taxon)	# if this.taxon has punctuation (e.g., "Equus sp.") or "indet", then just return this.taxon
+    if (grepl(pattern=" sp[[:punct:]]", x=this.taxon)) this.taxon <- gsub(pattern=" sp[[:punct:]]", replacement="", x=this.taxon)
+    if (grepl(pattern=" indet[[:punct:]]", x=this.taxon)) this.taxon <- gsub(pattern=" indet[[:punct:]]", replacement="", x=this.taxon)		# return (this.taxon)	# if this.taxon has punctuation (e.g., "Equus sp.") or "indet", then just return this.taxon
     this.URL <- URLencode(paste0(server, "taxa/single.csv?name=", this.taxon))
     this.names <- getStuffWithoutWarnings(this.URL)
     if (is.null(this.names$taxon_name)) {
