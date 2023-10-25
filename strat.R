@@ -59,14 +59,28 @@ getTaxonRangesFromOccs <- function(occs, rank="species", random=FALSE) {
 
 	cols <- getCollectionAgesFromOccs(occs=occs, random=random, max.age.name=max.age.name, min.age.name= min.age.name)
 	
-	taxa <- sort(unique(occs$accepted_name[occs$accepted_rank==rank]))
-
-	ranges <- array(NA, dim=c(length(taxa), 2), dimnames=list(taxa, c("FO", "LO")))
-	for (i in seq_len(nrow(ranges))) {
-		ranges[i,] <- rev(range(cols$collection_age[cols$collection_no %in% occs$collection_no[occs$accepted_name==rownames(ranges)[i]]], finite=TRUE))
-		# thisDates <- cols[cols$collection_no %in% occs$collection_no[occs$accepted_name==rownames(ranges)[i]],"collection_age"]
-		# ranges[i,] <- c(max(thisDates, na.rm=TRUE), min(thisDates, na.rm=TRUE))
+	if(rank == "species") 
+	{
+	  taxa <- sort(unique(occs$accepted_name[occs$accepted_rank==rank]))
+	  ranges <- array(NA, dim=c(length(taxa), 2), dimnames=list(taxa, c("FO", "LO")))
+	  for (i in seq_len(nrow(ranges))) {
+	    ranges[i,] <- rev(range(cols$collection_age[cols$collection_no %in% occs$collection_no[occs$accepted_name==rownames(ranges)[i]]], finite=TRUE))
+	    # thisDates <- cols[cols$collection_no %in% occs$collection_no[occs$accepted_name==rownames(ranges)[i]],"collection_age"]
+	    # ranges[i,] <- c(max(thisDates, na.rm=TRUE), min(thisDates, na.rm=TRUE))
+	  }
 	}
+	if(rank %in% c("genus", "species")) 
+	{
+	  taxa <- sort(unique(occs$genus[occs$accepted_rank %in% rank]))
+	  ranges <- array(NA, dim=c(length(taxa), 2), dimnames=list(taxa, c("FO", "LO")))
+	  for (i in seq_len(nrow(ranges))) {
+	    ranges[i,] <- rev(range(cols$collection_age[cols$collection_no %in% occs$collection_no[occs$genus==rownames(ranges)[i]]], finite=TRUE))
+	    # thisDates <- cols[cols$collection_no %in% occs$collection_no[occs$accepted_name==rownames(ranges)[i]],"collection_age"]
+	    # ranges[i,] <- c(max(thisDates, na.rm=TRUE), min(thisDates, na.rm=TRUE))
+	  }
+	}
+
+	
 	ranges
 }
 
