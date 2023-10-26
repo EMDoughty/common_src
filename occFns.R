@@ -4,52 +4,48 @@ server <- "https://paleobiodb.org/data1.2/"
 
 getStuffWithoutWarnings <- function(this.URL) {
 	# yy <- url(description=this.URL, method="libcurl")
-	# rawFile <- try(readLines(yy), silent=TRUE) # empty
+	# on.exit(close(yy))
+
+	on.exit(closeAllConnections())
+	# url.con <- url(this.URL)
 	dat <- try(read.csv(this.URL))
-	if (class(dat)=="try-error") { return(NULL) }
-	# else if (any(sapply(rawFile, grepl, pattern="Warning:"))) {
-		# warningMessages <- read.csv(textConnection(rawFile[grep("Warning:", rawFile)]), header=FALSE, stringsAsFactors=FALSE)
-		# sapply(warningMessages[,2], warning)
-		# zz <- textConnection(rawFile[-(1:grep("Records:", rawFile))])
-		# dat <- read.csv(zz)
-		# if (isOpen(zz)) close(zz)			
-	# } else {
-		# dat <- read.csv(yy)
-	# }
-	# if (isOpen(yy)) close(yy)
+	if (class(dat)=="try-error") {
+		closeAllConnections()
+		return(NULL)
+	}
 	dat
 }
 
 getOneCurrentTaxon <- function(this.taxon, only.taxon_no = FALSE, keep.changed.rank=TRUE) {
-  this.taxon <- as.character(this.taxon)
-  if (!is.na(this.taxon) & this.taxon != "") {
-    if (grepl(pattern=" sp[[:punct:]]", x=this.taxon)) this.taxon <- gsub(pattern=" sp[[:punct:]]", replacement="", x=this.taxon)
-    if (grepl(pattern=" indet[[:punct:]]", x=this.taxon)) this.taxon <- gsub(pattern=" indet[[:punct:]]", replacement="", x=this.taxon)		# return (this.taxon)	# if this.taxon has punctuation (e.g., "Equus sp.") or "indet", then just return this.taxon
-    this.URL <- URLencode(paste0(server, "taxa/single.csv?name=", this.taxon))
-    this.names <- getStuffWithoutWarnings(this.URL)
-    if (is.null(this.names$taxon_name)) {
-      warning(paste0("The taxon \"", this.taxon, "\" cannot be found in the Paleobiology Database"), call.=FALSE)
-      return(paste0("\"",this.taxon,"\""))
-    } else {
-      if (this.names$accepted_rank != this.names$taxon_rank & !keep.changed.rank) {
-        warning(paste0("The rank taxon \"", this.taxon, "\" has been changed from ", this.names$taxon_rank," to ", this.names$accepted_rank, " (", this.names$accepted_name,")"), call.=FALSE)
-        return(paste0("\"",this.taxon,"\""))
-      } else if (only.taxon_no) this.names$accepted_no else as.character(this.names$accepted_name)
-    }
-  } else NA
+	this.taxon <- as.character(this.taxon)
+	if (!is.na(this.taxon) & this.taxon != "") {
+		if (grepl(pattern=" sp[[:punct:]]", x=this.taxon)) this.taxon <- gsub(pattern=" sp[[:punct:]]", replacement="", x=this.taxon)
+		if (grepl(pattern=" indet[[:punct:]]", x=this.taxon)) this.taxon <- gsub(pattern=" indet[[:punct:]]", replacement="", x=this.taxon)		# return (this.taxon)	# if this.taxon has punctuation (e.g., "Equus sp.") or "indet", then just return this.taxon
+		this.URL <- URLencode(paste0(server, "taxa/single.csv?name=", this.taxon))
+		this.names <- getStuffWithoutWarnings(this.URL)
+		if (is.null(this.names$taxon_name)) {
+			warning(paste0("The taxon \"", this.taxon, "\" cannot be found in the Paleobiology Database"), call.=FALSE)
+			return(paste0("\"",this.taxon,"\""))
+		} else {
+			if (this.names$accepted_rank != this.names$taxon_rank & !keep.changed.rank) {
+				warning(paste0("The rank taxon \"", this.taxon, "\" has been changed from ", this.names$taxon_rank," to ", this.names$accepted_rank, " (", this.names$accepted_name,")"), call.=FALSE)
+				return(paste0("\"",this.taxon,"\""))
+			} else if (only.taxon_no) this.names$accepted_no else as.character(this.names$accepted_name)
+		}
+	} else NA
 }
 
 getCurrentTaxa <- function(tax.vec, show.progress=TRUE, only.taxon_no=FALSE, keep.changed.rank=TRUE) { #, do.parallel=FALSE
-  tax.vec.short <- unique(as.character(tax.vec))
-  
-  output <- vector()
-  for (i in seq_along(tax.vec.short)) {
-    if (show.progress) cat("\t**** Getting current taxon from PaleoBioDB\t", i, " of ", length(tax.vec.short), " (", round(i/length(tax.vec.short)*100, 1), "%)\r", sep="")
-    output <- c(output, getOneCurrentTaxon(this.taxon=tax.vec.short[i], only.taxon_no=only.taxon_no, keep.changed.rank=keep.changed.rank))
-  }
-  if (show.progress) print("")
-  name.mat <- cbind(input=tax.vec.short, output=output)
-  if (!only.taxon_no) factor(name.mat[match(tax.vec, name.mat[,"input"]),"output"]) else as.numeric(name.mat[match(tax.vec, name.mat[,"input"]),"output"])
+	tax.vec.short <- unique(as.character(tax.vec))
+
+	output <- vector()
+	for (i in seq_along(tax.vec.short)) {
+		if (show.progress) cat("\t**** Getting current taxon from PaleoBioDB\t", i, " of ", length(tax.vec.short), " (", round(i/length(tax.vec.short)*100, 1), "%)\r", sep="")
+		output <- c(output, getOneCurrentTaxon(this.taxon=tax.vec.short[i], only.taxon_no=only.taxon_no, keep.changed.rank=keep.changed.rank))
+	}
+	if (show.progress) print("")
+	name.mat <- cbind(input=tax.vec.short, output=output)
+	if (!only.taxon_no) factor(name.mat[match(tax.vec, name.mat[,"input"]),"output"]) else as.numeric(name.mat[match(tax.vec, name.mat[,"input"]),"output"])
 }
 
 
@@ -88,7 +84,7 @@ getOneTaxonTaxonomy <- function(this.taxon) {
 # taxonomy <- t(sapply(gsub("_", " ", rownames(head(thisMat, 10))), getOneTaxonTaxonomy))
 # for (this.taxon in gsub("_", " ", rownames(thisMat))) getOneTaxonTaxonomy(this.taxon)
 
-getTaxonomyForTaxa <- function(tax.vec=NULL, base) {
+getTaxonomyForTaxa <- function(tax.vec=NULL) {
 	# require(jsonlite)
 	# for (this.taxon in tax.vec) getOneTaxonTaxonomy(this.taxon)
 	# m <- as.data.frame(t(sapply(head(tax.vec,32), getOneTaxonTaxonomy)), stringsAsFactors=TRUE)
@@ -168,6 +164,16 @@ appendMissingOrders <- function(occs) {
 	occs
 }
 
+makeOneAcceptedRankFromNOW <- function(x) {
+	if (grepl(pattern="indet.", x=x["SPECIES"]) | grepl(pattern="sp.", x=x["SPECIES"])) {
+		if (grepl(pattern="indet.", x=x["genus"]) | grepl(pattern="gen.", x=x["genus"], fixed=TRUE)) {
+			if (grepl(pattern="\\N", x=x["SUBFAMILY"])) {
+				if (grepl(pattern="indet.", x=x["family"])) "order" else "family"
+			} else "subfamily"
+		} else "genus"
+	} else "species"
+}
+
 makeOneAcceptedNameFromNOW <- function(x) {
 	if (grepl(pattern="indet", x=x["SPECIES"]) | grepl(pattern="sp.", x=x["SPECIES"])) {
 		if (grepl(pattern="indet", x=x["genus"]) | grepl(pattern="gen.", x=x["genus"])) {
@@ -177,28 +183,30 @@ makeOneAcceptedNameFromNOW <- function(x) {
 }
 
 now2paleoDB <- function(db, maxCol=0, maxOcc=0, maxTax=0, fetch.pbdb.accepted_no=FALSE) {
-	colnames(db) <- c("collection_no_now", # LIDNUM
-					  "collection_name", #NAME
-					  "LATSTR", 
-					  "LONGSTR", 
-					  "lat", "lng", # LAT, LONG
-					  "max_ma", "BFA_MAX", "BFA_MAX_ABS", "FRAC_MAX", #MAX_AGE
-					  "min_ma", "BFA_MIN", "BFA_MIN_ABS", "FRAC_MIN", #MIN_AGE
-					  "CHRON", 
-					  "cc", "state", "county", # COUNTRY, STATE, COUNTY
-					  "APNUMSPM", "GENERAL", 
-					  "collection_aka", #LOC_SYNONYMS
-					  "accepted_no", # SIDNUM
-					  # need to check the following taxonomy for indeterminate assignments - not sure how cf. etc. are handled
-					  "order", "family", "SUBFAMILY", "genus", "SPECIES", # ORDER, FAMILY, ..., GENUS, ...
-					  "UNIQUE", "TAXON_STATUS", "ID_STATUS", "ADD_INFO", "SOURCE_NAME", 
-					  "SVLENGTH", "BODYMASS", "SXDIMSZE", "SXDIMDIS", "TSHM",
-					  "TCRWNHT", "CROWNTYP", "DIET_1", "DIET_2", "DIET_3",
-					  "LOCOMO1", "LOCOMO2", "LOCOMO3",
-					  "SPCOMMENT", "SYNONYMS")
+	colnames(db)[colnames(db)=="LIDNUM"] <- "collection_no_NOW"
+	colnames(db)[colnames(db)=="NAME"] <-  "collection_name"
+	colnames(db)[colnames(db)=="LAT"] <- "lat"
+	colnames(db)[colnames(db)=="LONG"] <- "lng"
+	colnames(db)[colnames(db)=="MAX_AGE"] <- "max_ma"
+	colnames(db)[colnames(db)=="MIN_AGE"] <- "min_ma"
+	colnames(db)[colnames(db)=="COUNTRY"] <-  "cc"
+	colnames(db)[colnames(db)=="STATE"] <- "state"
+	colnames(db)[colnames(db)=="COUNTY"] <- "county"
+	colnames(db)[colnames(db)=="LOC_SYNONYMS"] <- "collection_aka"
+	colnames(db)[colnames(db)=="SIDNUM"] <- "accepted_no"
+	colnames(db)[colnames(db)=="ORDER"] <- "order"
+	colnames(db)[colnames(db)=="FAMILY"] <- "family"
+	colnames(db)[colnames(db)=="GENUS"] <- "genus"
+	  # need to check the following taxonomy for indeterminate assignments - not sure how cf. etc. are handled
+	  # "UNIQUE", "TAXON_STATUS", "ID_STATUS", "ADD_INFO", "SOURCE_NAME", 
+	  # "SVLENGTH", "BODYMASS", "SXDIMSZE", "SXDIMDIS", "TSHM",
+	  # "TCRWNHT", "CROWNTYP", "DIET_1", "DIET_2", "DIET_3",
+	  # "LOCOMO1", "LOCOMO2", "LOCOMO3",
+	  # "SPCOMMENT", "SYNONYMS")
 
 	db$occurrence_no <- seq(from=(maxOcc + 1), to=(maxOcc + nrow(db)), by=1)
-	db$collection_no <- as.numeric(as.character(db$collection_no_now)) + maxCol # on col number is "We use Pinnipedia on order level for practical reasons." therefore the column is brought in as a factor
+	db$collection_no <- as.numeric(as.character(db$collection_no_NOW)) + maxCol # on col number is "We use Pinnipedia on order level for practical reasons." therefore the column is brought in as a factor
+	db$accepted_rank <- apply(db[,c("order", "family", "SUBFAMILY", "genus", "SPECIES")], 1, makeOneAcceptedRankFromNOW)
 	db$accepted_name <- apply(db[,c("order", "family", "genus", "SPECIES")], 1, makeOneAcceptedNameFromNOW)
 	db$accepted_no <- db$accepted_no + maxTax			# need to check if these names are already in the PBDB
 	if (fetch.pbdb.accepted_no) {
@@ -209,18 +217,18 @@ now2paleoDB <- function(db, maxCol=0, maxOcc=0, maxTax=0, fetch.pbdb.accepted_no
 	return(db)
 }
 
-getCollectionDatesFromOccs <- function(occs, age.determination=c("midpoint", "random")) {
-	age.determination <- match.arg(age.determination)
-	cols <- unique(occs[, c("collection_no", "ma_max", "ma_min")])
-	if (age.determination=="random") thisCols <- cbind(cols[,1], apply(cols[,2:3], 1, function(x) { runif(1, max=x[1], min=x[2]) })) else thisCols <- cbind(cols[,1], rowMeans(cols[,2:3]))
-	array(thisCols[,2], dimnames=list(thisCols[,1]))
-}
+# getCollectionDatesFromOccs <- function(occs, age.determination=c("midpoint", "random")) {
+	# age.determination <- match.arg(age.determination)
+	# cols <- unique(occs[, c("collection_no", "max_ma", "min_ma")])
+	# if (age.determination=="random") thisCols <- cbind(cols[,1], apply(cols[,2:3], 1, function(x) { runif(1, max=x[1], min=x[2]) })) else thisCols <- cbind(cols[,1], rowMeans(cols[,2:3]))
+	# array(thisCols[,2], dimnames=list(thisCols[,1]))
+# }
 
-getOccurrenceDatesFromOccs <- function(occs, age.determination=c("midpoint", "random")) {
-	age.determination <- match.arg(age.determination)
-	thisCols <- getCollectionDatesFromOccs(occs=occs[, c("collection_no", "ma_max", "ma_min")], age.determination=age.determination)
-	thisCols[match(occs$collection_no, as.numeric(rownames(thisCols)))]
-}
+# getOccurrenceDatesFromOccs <- function(occs, age.determination=c("midpoint", "random")) {
+	# age.determination <- match.arg(age.determination)
+	# thisCols <- getCollectionDatesFromOccs(occs=occs[, c("collection_no", "max_ma", "min_ma")], age.determination=age.determination)
+	# thisCols[match(occs$collection_no, as.numeric(rownames(thisCols)))]
+# }
 
 dateOccsWithAEO <- function(occs) {
 	aeo <- read.table("~/Dropbox/code/java/data/PBDBDates/11Nov07_tcdm.collnoages.txt", header=TRUE, strip.white=TRUE)
@@ -243,4 +251,20 @@ dateColsWithAEO <- function(occs, age.determination=c("midpoint", "random")) {
 	# thisCols[match(occs$collection_no, thisCols[,1]), 2]
 	array(thisCols[,2], dimnames=list(thisCols[,1]))
 }
+
+getNOWLocalityCodesFromPBDBCollectionNo <- function(collection_no.vec, this.file="~/Dropbox/code/R/pbdb_NOW_map/pbdb_NOW_map.csv") {
+	this.map <- read.csv(this.file)
+	this.map[this.map==""] <- NA
+	loc.vec <- this.map$NOW_loc[match(collection_no.vec, this.map$collection_no)]
+	factor(loc.vec)
+}
+
+getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/code/R/pbdb_NOW_map/NOW_loc_dates.csv", dates.only=FALSE) {
+	date.mat <- read.csv(this.file)
+	missing.codes <- sort(unique(code.vec[!code.vec%in%date.mat$LOC_SYNONYMS]))
+	if (length(missing.codes)>0) warning(paste("These collection codes were not found in the map", paste0(as.character(missing.codes), sep="\n")))
+	this.dates <- date.mat[match(code.vec, date.mat$LOC_SYNONYMS), c("BFA_MAX", "BFA_MIN", "MAX_AGE", "MIN_AGE", "CHRON")]
+	if (dates.only) return(this.dates[,c("MAX_AGE", "MIN_AGE")]) else return (this.dates)
+}
+
 
