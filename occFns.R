@@ -252,14 +252,14 @@ dateColsWithAEO <- function(occs, age.determination=c("midpoint", "random")) {
 	array(thisCols[,2], dimnames=list(thisCols[,1]))
 }
 
-getNOWLocalityCodesFromPBDBCollectionNo <- function(collection_no.vec, this.file="~/Dropbox/code/R/pbdb_NOW_map/pbdb_NOW_map.csv") {
+getNOWLocalityCodesFromPBDBCollectionNo <- function(collection_no.vec, this.file="~/Dropbox/Code/R/dentalMeasurements/dat/pbdb_NOW_map.csv") {
 	this.map <- read.csv(this.file)
 	this.map[this.map==""] <- NA
 	loc.vec <- this.map$NOW_loc[match(collection_no.vec, this.map$collection_no)]
 	factor(loc.vec)
 }
 
-getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/code/R/pbdb_NOW_map/NOW_loc_dates.csv", dates.only=FALSE) {
+getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/Code/R/dentalMeasurements/dat/NOW_loc_dates.csv", dates.only=FALSE) {
 	date.mat <- read.csv(this.file)
 	missing.codes <- sort(unique(code.vec[!code.vec%in%date.mat$LOC_SYNONYMS]))
 	if (length(missing.codes)>0) warning(paste("These collection codes were not found in the map", paste0(as.character(missing.codes), sep="\n")))
