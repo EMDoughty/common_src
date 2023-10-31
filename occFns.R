@@ -148,8 +148,8 @@ appendTaxonNames1.2 <- function(occs, taxonomic.level=c("family", "genus", "spec
 }
 
 appendMissingOrders <- function(occs) {
-	famList <- read.csv("~/Dropbox/code/common_dat/taxonomy.csv", stringsAsFactors=TRUE, strip.white=TRUE)
-	# missingOrders <- read.csv("~/Dropbox/code/common_dat/PBDBMissingOrders.csv", stringsAsFactors=FALSE, strip.white=TRUE)
+	famList <- read.csv("~/Dropbox/Code/common_dat/taxonomy.csv", stringsAsFactors=TRUE, strip.white=TRUE)
+	# missingOrders <- read.csv("~/Dropbox/Code/common_dat/PBDBMissingOrders.csv", stringsAsFactors=FALSE, strip.white=TRUE)
 	occs$order_name[is.na(occs$order_name)] <- factor(famList$occurrences.order_name[match(occs$family_name[is.na(occs$order_name)], famList$occurrences.family_name)], levels=unique(c(levels(occs$order_name), unique(famList$occurrences.order_name))))
 	occs$order_name[is.na(occs$order_name)] <- factor(famList$occurrences.order_name[match(occs$occurrence.genus_name[is.na(occs$order_name)], famList$occurrences.genus_name)], levels=unique(c(levels(occs$order_name), unique(famList$occurrences.order_name))))
 	# occs[!is.na(occs$family_name) & 
@@ -231,7 +231,7 @@ now2paleoDB <- function(db, maxCol=0, maxOcc=0, maxTax=0, fetch.pbdb.accepted_no
 # }
 
 dateOccsWithAEO <- function(occs) {
-	aeo <- read.table("~/Dropbox/code/java/data/PBDBDates/11Nov07_tcdm.collnoages.txt", header=TRUE, strip.white=TRUE)
+	aeo <- read.table("~/Dropbox/Code/java/data/PBDBDates/11Nov07_tcdm.collnoages.txt", header=TRUE, strip.white=TRUE)
 	aeo <- aeo[aeo$ma_max >= 0,]
 	for (i in seq_along(aeo$collection_no)) {
 		if (aeo$collection_no[i] %in% occs$collection_no) {
@@ -244,7 +244,7 @@ dateOccsWithAEO <- function(occs) {
 dateColsWithAEO <- function(occs, age.determination=c("midpoint", "random")) {
 	age.determination <- match.arg(age.determination)
 	cols <- unique(occs[, c("collection_no", "ma_max", "ma_min")])
-	aeo <- read.table("~/Dropbox/code/java/data/PBDBDates/11Nov07_tcdm.collnoages.txt", header=TRUE, strip.white=TRUE)
+	aeo <- read.table("~/Dropbox/Code/java/data/PBDBDates/11Nov07_tcdm.collnoages.txt", header=TRUE, strip.white=TRUE)
 	aeo <- aeo[aeo$ma_max >= 0,]
 	cols[cols$collection_no %in% aeo$collection_no, 2:3] <- aeo[match(cols$collection_no[cols$collection_no %in% aeo$collection_no], aeo$collection_no), 2:3]
 	if (age.determination=="random") thisCols <- cbind(cols[,1], apply(cols[,2:3], 1, function(x) { runif(1, max=x[1], min=x[2]) })) else thisCols <- cbind(cols[,1], rowMeans(cols[,2:3]))
