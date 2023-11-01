@@ -259,7 +259,7 @@ getNOWLocalityCodesFromPBDBCollectionNo <- function(collection_no.vec, this.file
 	factor(loc.vec)
 }
 
-getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/Code/R/pbdb_NOW_map/NOW_loc_dates.csv", dates.only=FALSE) {
+getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/Code/R/dentalMeasurements/dat/NOW_loc_dates.csv", dates.only=FALSE) {
   date.mat <- read.csv(this.file)
   date.mat$MAX_AGE[date.mat$MAX_AGE==64.81] <- 63.81	### fixes erroneous date of Pu3/To1 boundary in NOW databasae
   date.mat$MIN_AGE[date.mat$MIN_AGE==64.81] <- 63.81	### fixes erroneous date of Pu3/To1 boundary in NOW databasae
