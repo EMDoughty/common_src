@@ -259,12 +259,14 @@ getNOWLocalityCodesFromPBDBCollectionNo <- function(collection_no.vec, this.file
 	factor(loc.vec)
 }
 
-getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/Code/R/dentalMeasurements/dat/NOW_loc_dates.csv", dates.only=FALSE) {
-	date.mat <- read.csv(this.file)
-	missing.codes <- sort(unique(code.vec[!code.vec%in%date.mat$LOC_SYNONYMS]))
-	if (length(missing.codes)>0) warning(paste("These collection codes were not found in the map", paste0(as.character(missing.codes), sep="\n")))
-	this.dates <- date.mat[match(code.vec, date.mat$LOC_SYNONYMS), c("BFA_MAX", "BFA_MIN", "MAX_AGE", "MIN_AGE", "CHRON")]
-	if (dates.only) return(this.dates[,c("MAX_AGE", "MIN_AGE")]) else return (this.dates)
+getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/code/R/pbdb_NOW_map/NOW_loc_dates.csv", dates.only=FALSE) {
+  date.mat <- read.csv(this.file)
+  date.mat$MAX_AGE[date.mat$MAX_AGE==64.81] <- 63.81	### fixes erroneous date of Pu3/To1 boundary in NOW databasae
+  date.mat$MIN_AGE[date.mat$MIN_AGE==64.81] <- 63.81	### fixes erroneous date of Pu3/To1 boundary in NOW databasae
+  missing.codes <- sort(unique(code.vec[!code.vec%in%date.mat$LOC_SYNONYMS]))
+  if (length(missing.codes)>0) warning(paste("These collection codes were not found in the map", paste0(as.character(missing.codes), sep="\n")))
+  this.dates <- date.mat[match(code.vec, date.mat$LOC_SYNONYMS), c("BFA_MAX", "BFA_MIN", "MAX_AGE", "MIN_AGE", "CHRON")]
+  if (dates.only) return(this.dates[,c("MAX_AGE", "MIN_AGE")]) else return (this.dates)
 }
 
 
