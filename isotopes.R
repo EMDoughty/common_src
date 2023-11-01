@@ -1,9 +1,9 @@
-source("~/Dropbox/code/R/common_src/strat.R")
-source("~/Dropbox/code/R/common_src/utils_marcot.R")
-zachos2001 <- read.csv ("~/Dropbox/code/common_dat/zachos2001.csv")
+source("~/Dropbox/Code/R/common_src/strat.R")
+source("~/Dropbox/Code/R/common_src/utils_marcot.R")
+zachos2001 <- read.csv ("~/Dropbox/Code/common_dat/zachos2001.csv") # need to locate this file; currently missing 11/1/2023
 
 doTopesRateAnalysis <- function(intervals, thisBreaks=NULL, sig=0.01) {
-	source("~/Dropbox/code/R/amandaTeeth/src/amandaSrc.R")
+	source("~/Dropbox/Code/R/dentalMeasurements/src/amandaSrc.R")
 
 	# intervals_topes <- makeIntervals(max(zachos2001$Age), 0, 0.5)
 

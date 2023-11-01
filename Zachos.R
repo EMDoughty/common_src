@@ -17,7 +17,7 @@
 
 overlayIsotopes<-function(fill.alpha=0.25, border.alpha=1.0, plot.axis=TRUE, plot.loess=TRUE, loess.span=0.075) {
 	holdPar<-par()
-	topes<-read.table("~/Dropbox/code/java/data/isotopes.txt")
+	topes<-read.table("~/Dropbox/Code/java/data/isotopes.txt") #not in any files currently 11/1/2023
 	colnames(topes)<-c("ID", "date", "d18O", "d13C")
 	topes[topes==-999]<-NA
 	

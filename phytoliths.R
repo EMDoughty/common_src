@@ -1,12 +1,12 @@
-source("~/Dropbox/code/R/common_src/strat.R")
-source("~/Dropbox/code/R/common_src/utils_marcot.R")
-phytoliths <- read.csv ("~/Dropbox/code/common_dat/Strömberg2006.csv")
+source("~/Dropbox/Code/R/common_src/strat.R")
+source("~/Dropbox/Code/R/common_src/utils_marcot.R")
+phytoliths <- read.csv ("~/Dropbox/Code/common_dat/Strömberg2006.csv")
 ps <- c("wetland", "palm", "otherFI", "closed", "pooid", "pooid_non", "PACCAD", "otherGSSC", "nondiag")
 # ps <- c("palm", "otherFI", "closed", "pooid", "pooid_non", "PACCAD", "otherGSSC")
 
 
 doPhytolithRateAnalysis <- function(intervals, sig=0.01, reps=1) {
-	source("~/Dropbox/code/R/amandaTeeth/src/amandaSrc.R")
+	source("~/Dropbox/Code/R/dentalMeasurements/src/amandaSrc.R")
 	intervals <- intervals[intervals[,"ageTop"] <= max(phytoliths$ageMax) & intervals[,"ageBase"] > min(phytoliths$ageMin),]
 
 	repIntPhy <- list()

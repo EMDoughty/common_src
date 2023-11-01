@@ -1,4 +1,4 @@
-try(source("~/Dropbox/code/R/common_src/strat.R"), silent=TRUE)
+try(source("~/Dropbox/Code/R/common_src/strat.R"), silent=TRUE)
 try(source("https://dl.dropbox.com/s/8jy9de5owxj72p7/strat.R"), silent=TRUE)
 
 tipToNodeBranchID <- function(this.tip, this.tree) {	

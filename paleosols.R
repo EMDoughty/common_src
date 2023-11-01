@@ -1,12 +1,12 @@
-source("~/Dropbox/code/R/common_src/strat.R")
-source("~/Dropbox/code/R/common_src/utils_marcot.R")
-source("~/Dropbox/code/R/common_src/CzTimescale.R")
+source("~/Dropbox/Code/R/common_src/strat.R")
+source("~/Dropbox/Code/R/common_src/utils_marcot.R")
+source("~/Dropbox/Code/R/common_src/CzTimescale.R")
 
 intervals <- makeIntervals(1, 54.5, 1)
 
-paleosol_OR <- read.csv("~/Dropbox/code/common_dat/paleosol_OR.csv")
-paleosol_MT <- read.csv("~/Dropbox/code/common_dat/paleosol_MT.csv")
-paleosol_NE <- read.csv("~/Dropbox/code/common_dat/paleosol_NE.csv")
+paleosol_OR <- read.csv("~/Dropbox/Code/common_dat/paleosol_OR.csv") #these common_dat files are not in any of my folders 11/1/2023
+paleosol_MT <- read.csv("~/Dropbox/Code/common_dat/paleosol_MT.csv")
+paleosol_NE <- read.csv("~/Dropbox/Code/common_dat/paleosol_NE.csv")
 # paleosol <- rbind(paleosol, read.csv("~/Dropbox/code/common_dat/paleosol_MT.csv"))
 # paleosol <- rbind(paleosol, read.csv("~/Dropbox/code/common_dat/paleosol_NE.csv"))
 
