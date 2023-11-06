@@ -261,12 +261,10 @@ getNOWLocalityCodesFromPBDBCollectionNo <- function(collection_no.vec, this.file
 
 getNOWDatesMatFromLocCodes <- function(code.vec, this.file="~/Dropbox/Code/R/dentalMeasurements/dat/NOW_loc_dates.csv", dates.only=FALSE) {
   date.mat <- read.csv(this.file)
-  date.mat$MAX_AGE[date.mat$MAX_AGE==64.81] <- 63.81	### fixes erroneous date of Pu3/To1 boundary in NOW databasae
-  date.mat$MIN_AGE[date.mat$MIN_AGE==64.81] <- 63.81	### fixes erroneous date of Pu3/To1 boundary in NOW databasae
+  date.mat$MAX_AGE[date.mat$MAX_AGE==64.1] <- 65.83	### makes any collection from Pu3 from combined Pu2/Pu3
+  date.mat$MIN_AGE[date.mat$MIN_AGE==64.1] <- 64.81	### makes any collection from Pu2 from combined Pu2/Pu3
   missing.codes <- sort(unique(code.vec[!code.vec%in%date.mat$LOC_SYNONYMS]))
   if (length(missing.codes)>0) warning(paste("These collection codes were not found in the map", paste0(as.character(missing.codes), sep="\n")))
   this.dates <- date.mat[match(code.vec, date.mat$LOC_SYNONYMS), c("BFA_MAX", "BFA_MIN", "MAX_AGE", "MIN_AGE", "CHRON")]
   if (dates.only) return(this.dates[,c("MAX_AGE", "MIN_AGE")]) else return (this.dates)
 }
-
-
