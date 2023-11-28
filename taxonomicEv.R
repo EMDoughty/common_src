@@ -189,7 +189,7 @@ getRichnessMatrixFromOccs <- function(this.occs, intervals, occs.column.higher="
 }
 
 plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log = FALSE, xlim = NULL, ylim = NULL, 
-                                xaxp = NULL, yaxp = NULL, cex.axis = 1, cex.lab = 1, las = 0, plot.adj = NULL, 
+                                xaxp = NULL, yaxp = NULL, xaxs = "r", yaxs = "r", cex.axis = 1, cex.lab = 1, las = 0, plot.adj = NULL, 
                                 col.axis = "black", col.lab = "black", poly.col = NULL,
                                 xaxt = NULL, yaxt = NULL, 
                                 ylab = "Richness (Number of Subtaxa)", xlab = "Time (Ma)",
@@ -230,10 +230,11 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
   
   if (is.null(xlim)) { plot(rowMeans(intervals), this.box[,1], xlim=c(max(rowMeans(intervals)), min(rowMeans(intervals))), 
                             ylim=y_lim, xaxp= xaxp, yaxp= yaxp, type="n", xaxt = xaxt, yaxt = yaxt, las = las,
+                            xaxs = xaxs, yaxs = yaxs,
                             usr=c(max(rowMeans(intervals), min(rowMeans(intervals)), 0, 1)), 
                             xaxs="i", yaxs="i", xlab = x_lab, ylab = ylab, 
                             col.axis = col.axis, col.lab = col.lab, cex.axis = cex.axis, cex.lab = cex.lab, adj = plot.adj)
-  } else plot(rowMeans(intervals), this.box[,1], xlim= xlim, ylim= y_lim, xaxp= xaxp, yaxp= yaxp, las = las, type="n", 
+  } else plot(rowMeans(intervals), this.box[,1], xlim= xlim, ylim= y_lim, xaxp= xaxp, yaxp= yaxp, las = las, type="n",xaxs = xaxs, yaxs = yaxs,
               xaxt = xaxt, yaxt = yaxt, xlab = xlab, ylab = ylab, col.axis = col.axis, col.lab = col.lab, cex.axis = cex.axis, cex.lab = cex.lab, adj = plot.adj)
   
   overlayCzTimescale(do.subepochs=do.subepochs, color = overlay.color, thisAlpha.text = thisAlpha.text, thisAlpha.intervals = thisAlpha.intervals, borderCol = borderCol, invertTime = invertTime, scale.cex = scale.cex, scale.headers = scale.headers, text.offset = text.offset)
