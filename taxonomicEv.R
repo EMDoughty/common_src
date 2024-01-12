@@ -93,7 +93,7 @@ alroyCountsForOneTaxon <- function(o) {
 
 alroyCountsFromOccs <- function(occList, occs, restrict.col=NULL, restrict.class=NULL) {
 	# for (i in 1:length(occList)) if (!is.null(occList[[i]])) as.character(occs[occs$occurrence_no%in%occList[[i]],]$taxon) else NA 
-	taxList <- lapply(occList, function(x) { if (!is.null(x)) unique(as.character(occs[occs$occurrence_no%in%x,]$taxon)) else NA })	#gets the taxa in each (occurrence in each) interval
+	taxList <- lapply(occList, function(x) { if (!is.null(x)) unique(as.character(occs[occs$occurrence_no%in%x,]$accepted_name)) else NA })	#gets the taxa in each (occurrence in each) interval
 	taxVec <- unique(unlist(taxList))
 	if (!is.null(restrict.col) & !is.null(restrict.class)) taxVec <- taxVec[taxVec %in% occs$taxon[occs[,restrict.col] %in% restrict.class]]
 	oList<-sapply(taxVec, function(x) { sapply(taxList, function(y) { x%in%y }) })										#converts taxa in each interval into a boolean
