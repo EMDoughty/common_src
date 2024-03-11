@@ -1,0 +1,264 @@
+name,abbr,interval,order,ageBase,ageTop,red,green,blue
+Phanerozoic,Phan,eon,1,541,0,154,217,221
+Proterozoic,Prot,eon,2,2500,541,247,53,99
+Archaean,Arch,eon,3,4000,2500,240,4,127
+Hadean,Had,eon,4,4600,4000,174,2,126
+Holocene,Holo,epoch,1,0.012,0,254,242,224
+Pleistocene,Pleisto,epoch,2,2.58,0.012,255,242,174
+Pliocene,Plio,epoch,3,5.333,2.58,255,255,153
+Miocene,Mio,epoch,4,23.03,5.333,255,255,0
+Oligocene,Oligo,epoch,5,33.9,23.03,253,192,122
+Eocene,Eo,epoch,6,56,33.9,253,180,108
+Paleocene,Paleo,epoch,7,66,56,253,167,95
+Late Cretaceous,lK,epoch,8,100.5,66,166,216,74
+Early Cretaceous,eK,epoch,9,145,100.5,140,205,87
+Late Jurassic,lJur,epoch,10,163.5,145,179,227,238
+Middle Jurassic,mJur,epoch,11,174.1,163.5,128,207,216
+Early Jurassic,eJur,epoch,12,201.3,174.1,66,174,208
+Late Triassic,lTr,epoch,13,237,201.3,189,140,195
+Middle Triassic,mTr,epoch,14,247.2,237,177,104,177
+Early Triassic,eTr,epoch,15,251.902,247.2,152,57,153
+Lopingian,Lo,epoch,16,259.51,251.902,251,167,148
+Guadalupian,Guad,epoch,17,273.01,259.51,251,116,92
+Cisuralian,Cis,epoch,18,298.9,273.01,239,88,69
+Late Pennsylvanian,lPenn,epoch,19,307,298.9,191,208,186
+Middle Pennsylvanian,mPenn,epoch,20,315.2,307,166,199,183
+Early Pennsylvanian,ePenn,epoch,21,323.2,315.2,140,190,180
+Late Mississippian,lMiss,epoch,22,330.9,323.2,179,190,108
+Middle Mississippian,mMiss,epoch,23,346.7,330.9,153,180,108
+Early Mississippian,eMiss,epoch,24,358.9,346.7,128,171,108
+Late Devonian,lDev,epoch,25,382.7,358.9,241,225,157
+Middle Devonian,mDev,epoch,26,393.3,382.7,241,200,104
+Early Devonian,eDev,epoch,27,419.2,393.3,229,172,77
+Pridoli,Pri,epoch,28,423,419.2,230,245,225
+Ludlow,Lud,epoch,29,427.4,423,191,230,207
+Wenlock,Wen,epoch,30,433.4,427.4,179,225,194
+Llandovery,Llan,epoch,31,443.07,433.4,153,215,179
+Late Ordovician,lOrd,epoch,32,458.18,443.07,127,202,147
+Middle Ordovician,mOrd,epoch,33,471.26,458.18,77,180,126
+Early Ordovician,eOrd,epoch,34,486.85,471.26,26,157,111
+Furongian,Fur,epoch,35,497,486.85,179,224,149
+Series 3,Ser3,epoch,36,509,497,166,207,134
+Series 2,Ser2,epoch,37,521,509,153,192,120
+Terreneuvian,Terr,epoch,38,541,521,140,176,108
+Cenozoic,Cz,era,1,66,0,242,249,29
+Mesozoic,Mz,era,2,251.902,66,103,197,202
+Paleozoic,Pz,era,3,541,251.902,153,192,144
+Neoproterozoic,NeoProt,era,4,1000,541,254,179,66
+Mesoproterozoic,MesoProt,era,5,1600,1000,253,180,98
+Paleoproterozoic,PaleoProt,era,6,2500,1600,247,67,112
+Neoarchaean,Neoarch,era,7,2800,2500,249,155,193
+Mesoarchean,Mesoarch,era,8,3200,2800,247,104,169
+Paleoarchean,Paleoarch,era,9,3600,3200,244,68,159
+Eoarchean,Eoarch,era,10,4000,3600,218,3,127
+Quaternary,Quat,period,1,2.58,0,249,249,127
+Neogene,Ng,period,2,23.03,2.58,255,230,25
+Paleogene,Pg,period,3,66,23.03,253,154,82
+Cretaceous,K,period,4,145,66,127,198,78
+Jurassic,Jur,period,5,201.3,145,52,178,201
+Triassic,Tri,period,6,251.902,201.3,129,43,146
+Permian,Perm,period,7,298.9,251.902,240,64,40
+Pennsylvanian,Penn,period,8,323.2,298.9,153,194,181
+Mississippian,Miss,period,9,358.9,323.2,103,143,102
+Carboniferous,Carb,period,10,358.9,298.9,103,165,153
+Devonian,Dev,period,11,419.2,358.9,203,140,55
+Silurian,Sil,period,12,443.07,419.2,179,225,182
+Ordovician,Ord,period,13,486.85,443.07,0,146,112
+Cambrian,Cam,period,14,541,486.85,127,160,86
+Ediacaran,Ed,period,15,635,541,254,217,106
+Cryogenian,Cryo,period,16,720,635,254,204,92
+Tonian,Ton,period,17,1000,720,254,191,78
+Stenian,Sten,period,18,1200,1000,254,217,154
+Ectasian,Ect,period,19,1400,1200,253,204,138
+Calymmian,Caly,period,20,1600,1400,253,192,122
+Statherian,Stath,period,21,1800,1600,248,117,167
+Orosirian,Oro,period,22,2050,1800,247,104,152
+Rhyacian,Rhy,period,23,2300,2050,247,91,137
+Siderian,Sid,period,24,2500,2300,247,79,124
+Meghalayan,Meg,stage,1,0.0043,0,254,242,244
+Northgrippian,Nor,stage,2,0.0082,0.0043,254,242,236
+Greenlandian,Gre,stage,3,0.0117,0.0082,254,242,229
+Upper,Up,stage,4,0.126,0.0117,255,242,211
+Chibanian,Chi,stage,5,0.773,0.126,255,242,199
+Calabrian,Cal,stage,6,1.81,0.773,255,242,186
+Gelasian,Gel,stage,7,2.58,1.81,255,237,179
+Piacenzian,Pia,stage,8,3.6,2.58,255,255,191
+Zanclean,Zan,stage,9,5.33,3.6,255,255,179
+Messinian,Mess,stage,10,7.25,5.33,255,255,115
+Tortonian,Tor,stage,11,11.65,7.25,255,255,102
+Serravallian,Serr,stage,12,13.82,11.65,255,255,89
+Langhian,Lang,stage,13,15.99,13.82,255,255,77
+Burdigalian,Burd,stage,14,20.45,15.99,255,255,65
+Aquitanian,Aquit,stage,15,23.04,20.45,255,255,51
+Chattian,Chat,stage,16,27.29,23.04,254,230,170
+Rupelian,Rup,stage,17,33.9,27.29,254,217,154
+Priabonian,Pria,stage,18,37.71,33.9,253,205,161
+Bartonian,Bart,stage,19,41.03,37.71,253,192,145
+Lutetian,Lut,stage,20,48.07,41.03,252,180,130
+Ypresian,Ypr,stage,21,56,48.07,252,167,115
+Thanetian,Than,stage,22,59.24,56,253,191,111
+Selandian,Sel,stage,23,61.66,59.24,254,191,101
+Danian,Dan,stage,24,66,61.66,253,180,98
+Maastrichtian,Maa,stage,25,72.17,66,242,250,140
+Campanian,Cam,stage,26,84.65,72.17,230,244,127
+Santonian,San,stage,27,85.7,84.65,217,239,116
+Coniacian,Con,stage,28,89.39,85.7,204,233,104
+Turonian,Tur,stage,29,93.9,89.39,191,227,93
+Cenomanian,Cen,stage,30,100.5,93.9,179,222,83
+Albian,Alb,stage,31,113.2,100.5,204,234,151
+Aptian,Apt,stage,32,121.4,113.2,191,228,138
+Barremian,Bar,stage,33,126.5,121.4,179,223,127
+Hauterivian,Hau,stage,34,132.6,126.5,166,217,117
+Valanginian,Val,stage,35,137.7,132.6,153,211,106
+Berriasian,Ber,stage,36,143.1,137.7,130,205,96
+Tithonian,Tith,stage,37,149.24,143.1,217,241,247
+Kimmeridgian,Kim,stage,38,154.78,149.24,204,236,244
+Oxfordian,Oxf,stage,39,161.53,154.78,191,231,241
+Callovian,Cal,stage,40,165.29,161.53,191,231,229
+Bathonian,Bath,stage,41,168.17,165.29,179,226,227
+Bajocian,Baj,stage,42,170.9,168.17,166,221,224
+Aalenian,Aal,stage,43,174.7,170.9,154,217,221
+Toarcian,Toar,stage,44,184.2,174.7,153,206,227
+Pliensbachian,Plien,stage,45,192.9,184.2,128,197,221
+Sinemurian,Sin,stage,46,199.46,192.9,103,188,216
+Hettangian,Het,stage,47,201.36,199.46,78,179,211
+Rhaetian,Rhae,stage,48,205.74,201.36,227,185,219
+Norian,Nor,stage,49,227.3,205.7,214,170,211
+Carnian,Carn,stage,50,237,227.3,201,155,203
+Ladinian,Lad,stage,51,241.46,237,201,131,191
+Anisian,Ani,stage,52,246.7,241.46,188,117,183
+Olenekian,Ole,stage,53,249.88,246.7,176,81,165
+Induan,Ind,stage,54,251.9,249.88,164,70,159
+Changhsingian,Cha,stage,55,254.2,251.9,252,192,178
+Wuchiapingian,Wuch,stage,56,259.5,254.2,252,180,162
+Capitanian,Cap,stage,57,264.3,259.5,251,154,133
+Wordian,Wor,stage,58,269.2,264.3,251,141,118
+Roadian,Road,stage,59,274.4,269.2,251,128,105
+Kungurian,Kung,stage,60,283.3,274.4,227,135,118
+Artinskian,Art,stage,61,290.5,283.3,227,123,104
+Sakmarian,Sak,stage,62,293.5,290.5,227,111,92
+Asselian,Ass,stage,63,298.9,293.5,227,99,80
+Gzhelian,Gzh,stage,64,303.7,298.9,204,212,199
+Kasimovian,Kas,stage,65,307,303.7,191,208,197
+Moscovian,Mos,stage,66,315.2,307,179,203,185
+Bashkirian,Bash,stage,67,323.4,315.2,153,194,181
+Serpukhovian,Serp,stage,68,330.3,323.4,191,194,107
+Visean,Vis,stage,69,346.7,330.3,166,185,108
+Tournaisian,Tour,stage,70,359.3,346.7,140,176,108
+Fammenian,Famm,stage,71,371.1,359.3,242,237,197
+Frasnian,Fras,stage,72,378.9,371.1,242,237,173
+Givetian,Giv,stage,73,385.3,378.9,241,225,133
+Eifelian,Eif,stage,74,394.3,385.3,241,213,118
+Emsian,Ems,stage,75,410.5,394.3,229,208,117
+Pragian,Prag,stage,76,412.4,410.5,229,196,104
+Lochkovian,Loch,stage,77,419,412.4,229,183,90
+Pridoli,Pri,stage,78,422.7,419,230,245,225
+Ludfordian,Lud,stage,79,425,422.7,217,240,223
+Gorstian,Gor,stage,80,426.7,425,204,236,221
+Homerian,Hom,stage,81,430.6,426.7,204,235,209
+Sheinwoodian,She,stage,82,432.9,430.6,191,230,195
+Telychian,Tel,stage,83,438.6,432.9,191,230,207
+Aeronian,Aer,stage,84,440.5,438.6,179,225,194
+Rhuddanian,Rhud,stage,85,443.1,440.5,166,220,181
+Himantian,Him,stage,86,445.2,443.1,166,219,171
+Katian,Kat,stage,87,452.8,445.2,153,214,159
+Sandbian,San,stage,88,458.2,452.8,140,208,148
+Darriwilian,Dar,stage,89,469.4,458.2,116,198,156
+Dapingian,Dap,stage,90,471.3,469.4,102,192,146
+Floian,Flo,stage,91,477.1,471.3,65,176,135
+Tremadocian,Trem,stage,92,486.9,477.1,51,169,126
+Stage 10,S10,stage,93,491,486.9,230,245,201
+Jiangshanian,Jian,stage,94,494.2,491,217,240,187
+Paibian,Pai,stage,95,497,494.2,204,235,174
+Guzhangian,Guzh,stage,96,500.5,497,204,223,170
+Drumian,Drum,stage,97,504.5,500.5,191,217,157
+Stage 5,S5,stage,98,509,504.5,179,212,146
+Stage 4,S4,stage,99,514.5,509,179,202,142
+Stage 3,S3,stage,100,521,514.5,166,197,131
+Stage 2,S2,stage,101,529,521,166,186,128
+Fortunian,For,stage,102,541,529,153,181,117
+Rancholabrean,Rlb,NALMA,1,0.2,0,,,
+Irvingtonian,Ir,NALMA,2,1.8,0.2,,,
+Blancan,Bl,NALMA,3,4.91,1.8,,,
+Hemphillian,Hh,NALMA,4,9.07,4.91,,,
+Clarendonian,Cl,NALMA,5,12.57,9.07,,,
+Barstovian,Ba,NALMA,6,15.97,12.57,,,
+Hemingfordian,He,NALMA,7,18.5,15.97,,,
+Arikareean,Ar,NALMA,8,29.75,18.5,,,
+Whitneyan,Wh,NALMA,9,32.1,29.75,,,
+Orellan,Or,NALMA,10,33.9,32.1,,,
+Chadronian,Ch,NALMA,11,37.39,33.9,,,
+Duchesnean,Du,NALMA,12,39.83,37.39,,,
+Uintan,Ui,NALMA,13,47.96,39.83,,,
+Bridgerian,Br,NALMA,14,52.11,47.96,,,
+Wasatchian,Wa,NALMA,15,55.96,52.11,,,
+Clarkforkian,Cf,NALMA,16,57.24,55.96,,,
+Tiffanian,Ti,NALMA,17,62.22,57.24,,,
+Torrejonian,To,NALMA,18,64.81,62.22,,,
+Puercan,Pu,NALMA,19,66.04,64.81,,,
+Lancian,La,NALMA,20,67.5,66.04,,,
+Edmontonian,Ed,NALMA,21,74,67.5,,,
+Judithian,Ju,NALMA,22,79,74,,,
+rancholabrean,Rlb,NALMA_sub,1,0.2,0,,,
+irvingtonian-2,Ir2,NALMA_sub,2,0.9,0.39,,,
+irvingtonian-1,Ir1,NALMA_sub,3,1.8,0.9,,,
+blancan-late,Bl2,NALMA_sub,4,2.63,1.8,,,
+blancan-early,Bl1,NALMA_sub,5,4.91,2.63,,,
+hemphillian-4,Hh4,NALMA_sub,6,5.91,4.91,,,
+hemphillian-3,Hh3,NALMA_sub,7,6.88,5.91,,,
+hemphillian-2,Hh2,NALMA_sub,8,7.59,6.88,,,
+hemphillian-1,Hh1,NALMA_sub,9,9.07,7.59,,,
+clarendonian-3,Cl3,NALMA_sub,10,10.09,9.07,,,
+clarendonian-2,Cl2,NALMA_sub,11,12.11,10.09,,,
+clarendonian-1,Cl1,NALMA_sub,12,12.57,12.11,,,
+barstovian-2,Ba2,NALMA_sub,13,14.78,12.57,,,
+barstovian-1,Ba1,NALMA_sub,14,15.97,14.78,,,
+hemingfordian-2,He2,NALMA_sub,15,17.34,15.97,,,
+hemingfordian-1,He1,NALMA_sub,16,18.5,17.34,,,
+arikareean-4,Ar4,NALMA_sub,17,19.09,18.5,,,
+arikareean-3,Ar3,NALMA_sub,18,22.2,19.09,,,
+arikareean-2,Ar2,NALMA_sub,19,28,22.2,,,
+arikareean-1,Ar1,NALMA_sub,20,29.75,28,,,
+whitneyan-2,Wh2,NALMA_sub,21,31.4,29.75,,,
+whitneyan-1,Wh1,NALMA_sub,22,32.1,31.4,,,
+orellan-4,Or4,NALMA_sub,23,32.5,32.1,,,
+orellan-3,Or3,NALMA_sub,24,33.1,32.5,,,
+orellan-2,Or2,NALMA_sub,25,33.4,33.1,,,
+orellan-1,Or1,NALMA_sub,26,33.9,33.4,,,
+chadronian-4,Ch4,NALMA_sub,27,34.7,33.9,,,
+chadronian-3,Ch3,NALMA_sub,28,35.24,34.7,,,
+chadronian-2,Ch2,NALMA_sub,29,35.92,35.24,,,
+chadronian-1,Ch1,NALMA_sub,30,37.39,35.92,,,
+duchesnean,Du,NALMA_sub,31,39.83,37.39,,,
+uintan-3,Ui3,NALMA_sub,32,42.78,39.83,,,
+uintan-2,Ui2,NALMA_sub,33,45.38,42.78,,,
+uintan-1,Ui1,NALMA_sub,34,47.96,45.38,,,
+bridgerian-3,Br3,NALMA_sub,35,48.64,47.96,,,
+bridgerian-2,Br2,NALMA_sub,36,49.27,48.64,,,
+bridgerian-1,Br1,NALMA_sub,37,51.91,49.27,,,
+bridgerian-0,Br0,NALMA_sub,38,52.11,51.91,,,
+wasatchian-7,Wa7,NALMA_sub,39,53.07,52.11,,,
+wasatchian-6,Wa6,NALMA_sub,40,53.42,53.07,,,
+wasatchian-5,Wa5,NALMA_sub,41,54.05,53.42,,,
+wasatchian-4,Wa4,NALMA_sub,42,54.61,54.05,,,
+wasatchian-3,Wa3,NALMA_sub,43,55.07,54.61,,,
+wasatchian-2,Wa2,NALMA_sub,44,55.54,55.07,,,
+wasatchian-1,Wa1,NALMA_sub,45,55.79,55.54,,,
+wasatchian-0,Wa0,NALMA_sub,46,55.96,55.79,,,
+clarkforkian-3,Cf3,NALMA_sub,47,56.54,55.96,,,
+clarkforkian-2,Cf2,NALMA_sub,48,57.04,56.54,,,
+clarkforkian-1,Cf1,NALMA_sub,49,57.24,57.04,,,
+tiffanian-6,Ti6,NALMA_sub,50,57.66,57.24,,,
+tiffanian-5,Ti5,NALMA_sub,51,58.24,57.66,,,
+tiffanian-4,Ti4,NALMA_sub,52,58.63,58.24,,,
+tiffanian-3,Ti3,NALMA_sub,53,59.61,58.63,,,
+tiffanian-2,Ti2,NALMA_sub,54,61.61,59.61,,,
+tiffanian-1,Ti1,NALMA_sub,55,62.22,61.61,,,
+torrejonian-3,To3,NALMA_sub,56,62.52,62.22,,,
+torrejonian-2,To2,NALMA_sub,57,63.49,62.52,,,
+torrejonian-1,To1,NALMA_sub,58,64.81,63.49,,,
+puercan-2/3,Pu2/3,NALMA_sub,59,65.83,64.81,,,
+puercan-1,Pu1,NALMA_sub,61,66.04,65.83,,,
+Lancian,La,NALMA_sub,62,67.5,66.04,,,
+Edmontonian,Ed,NALMA_sub,63,74,67.5,,,
+Judithian,Ju,NALMA_sub,64,79,74,,,
