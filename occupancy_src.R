@@ -1,8 +1,8 @@
 #### occupancy_src
-require(sp)
-require(geosphere)
-require(nloptr)
-require(pracma)
+if("sp" %in% installed.packages()[,"Package"]) {require(sp)} else {install.packages("sp")}
+if("geosphere" %in% installed.packages()[,"Package"]) {require(geosphere)} else {install.packages("geosphere")}
+if("nloptr" %in% installed.packages()[,"Package"]) {require(nloptr)} else {install.packages("nloptr")}
+if("pracma" %in% installed.packages()[,"Package"]) {require(pracma)} else {install.packages("pracma")}
 
 ######################################################################################################################################################
 ##### parameters for integration routines
