@@ -195,7 +195,8 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
                                 ylab = "Richness (Number of Subtaxa)", xlab = "Time (Ma)",
                                 add.legend = TRUE, prop.ylab = FALSE,
                                 numbers.only = FALSE, overlay.labels = FALSE, overlay.labels.col = "white", overlay.labels.cex = 0.5, #overlay.labels.coords = NULL,
-                                overlay.CZ.color = TRUE, do.subepochs = FALSE, thisAlpha.text = 0.33, thisAlpha.intervals = 0.33, borderCol = "white", invertTime = FALSE, scale.cex = 0.75, scale.headers = 0.95, text.offset = 0.025) 
+                                oldCZoverlay = TRUE, overlay.CZ.color = TRUE, do.subepochs = FALSE, thisAlpha.text = 0.33, thisAlpha.intervals = 0.33, borderCol = "white", invertTime = FALSE, scale.cex = 0.75, scale.headers = 0.95, text.offset = 0.025,
+                                CZnew_include.intervals = c("period","epoch","stage")) 
 {
   # this.box <-this.box[,order(this.box[nrow(this.box)-1,], decreasing=TRUE)]
   # this.box <-this.box[,order(colMeans(this.box, na.rm=TRUE))]
@@ -236,7 +237,14 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
   } else plot(rowMeans(intervals), this.box[,1], xlim= xlim, ylim= y_lim, xaxp= xaxp, yaxp= yaxp, las = las, type="n",xaxs = xaxs, yaxs = yaxs,
               xaxt = xaxt, yaxt = yaxt, xlab = xlab, ylab = ylab, col.axis = col.axis, col.lab = col.lab, cex.axis = cex.axis, cex.lab = cex.lab, adj = plot.adj)
   
-  overlayCzTimescale(do.subepochs=do.subepochs, color = overlay.CZ.color, thisAlpha.text = thisAlpha.text, thisAlpha.intervals = thisAlpha.intervals, borderCol = borderCol, invertTime = invertTime, scale.cex = scale.cex, scale.headers = scale.headers, text.offset = text.offset)
+  if(oldCZoverlay)
+  {
+    source("~/Dropbox/Code/R/common_src/CzTimescale.R")
+    overlayCzTimescale(do.subepochs=do.subepochs, color = overlay.CZ.color, thisAlpha.text = thisAlpha.text, thisAlpha.intervals = thisAlpha.intervals, borderCol = borderCol, invertTime = invertTime, scale.cex = scale.cex, scale.headers = scale.headers, text.offset = text.offset)
+  } else {
+    source("~/Dropbox/Code/R/Scripts_Source Sent by Jon/CzTimescale.R")
+    overlayCzTimescale(include.intervals = CZnew_include.intervals)
+  }
   
   polygon(c(rowMeans(intervals), rev(rowMeans(intervals))), c(this.box[,1], rep(0, nrow(intervals))), col=this.fills[1], border="gray33", xlab="Time (Ma)", ylab="Proportion of Taxa", lwd=0.5)
   for (i in 2:ncol(this.box)) polygon(c(rowMeans(intervals), rev(rowMeans(intervals))), c(this.box[,i], this.box[nrow(intervals):1,i-1]), col=this.fills[i], border="gray33", lwd=0.5)
