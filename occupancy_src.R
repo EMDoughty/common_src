@@ -1,8 +1,9 @@
 #### occupancy_src
-if("sp" %in% installed.packages()[,"Package"]) {require(sp)} else {install.packages("sp")}
-if("geosphere" %in% installed.packages()[,"Package"]) {require(geosphere)} else {install.packages("geosphere")}
-if("nloptr" %in% installed.packages()[,"Package"]) {require(nloptr)} else {install.packages("nloptr")}
-if("pracma" %in% installed.packages()[,"Package"]) {require(pracma)} else {install.packages("pracma")}
+require(sp)
+require(geosphere)
+require(nloptr)
+require(pracma)
+require(parallel)
 
 ######################################################################################################################################################
 ##### parameters for integration routines
@@ -15,17 +16,21 @@ max.intervals <- 1e2L
 ##### function to place occs into grid cells labeled with unique identifying label
 ######################################################################################################################################################
 
+getGridCellOneColl <- function(this.col, grid.cells) {
+	x <- as.numeric(unique(occs[occs$collection_no==this.col, c("lat", "lng")]))
+	grid.cells$label[grid.cells[, "lat.start"] >= x[1] & grid.cells[, "lat.end"] < x[1] & grid.cells[, "lng.start"] <= x[2] & grid.cells[, "lng.end"] > x[2]]
+}
+
 getGridCellsFromOccs <- function(lat.increment = 1, lng.increment = 1) {
-	cell.label <- 1
-	grid.cells <- array(data = NA, dim = c(0, 5), dimnames = list(NULL, c("label", "lat.start", "lat.end", "lng.start", "lng.end")))
-	for (this.lat in seq(from = ceiling(max(occs$lat)), to = floor(min(occs$lat)), by = -lat.increment)) {
-		for (this.lng in seq(from = floor(min(occs$lng)), to = ceiling(max(occs$lng)), by = lng.increment)) {
-			grid.cells <- rbind(grid.cells, c(label = cell.label, lat.start = this.lat, lat.end = this.lat + lat.increment, lng.start = this.lng, lng.end = this.lng + lng.increment))
-			cell.label <- cell.label + 1
-		}
-	}
-	grid.vec <- apply(X=occs[, c("lat", "lng")], MARGIN=1, FUN=function(x) grid.cells[grid.cells[, "lat.start"] <= x[1] & grid.cells[, "lat.end"] > x[1] & grid.cells[, "lng.start"] <= x[2] & grid.cells[, "lng.end"] > x[2], "label"])
-	list(grid.mat=data.frame(grid.cells), grid.vec=grid.vec)
+	m <- mclapply(seq(from = ceiling(max(occs$lat)), to = floor(min(occs$lat)), by = -lat.increment), function(x) cbind(x, seq(from = floor(min(occs$lng)), to = ceiling(max(occs$lng)), by = lng.increment)), mc.cores=detectCores()-2)
+	grid.cells <- m[[1]]
+	for (i in seq(from=2, to=length(m))) grid.cells <- rbind(grid.cells, m[[i]])
+	# rm(m)
+	grid.cells <- data.frame(label=seq_len(nrow(grid.cells)), lat.start=grid.cells[,1], lat.end=grid.cells[,1]-lat.increment, lng.start=grid.cells[,2], lng.end=grid.cells[,2]+lng.increment)
+	this.cols <- sort(unique(occs$collection_no))
+	col.grid <- data.frame(collection_no=this.cols, grid.cell=simplify2array(mclapply(X=this.cols, FUN=getGridCellOneColl, grid.cells=grid.cells, mc.cores=detectCores()-2)))
+	grid.vec <- col.grid$grid.cell[match(occs$collection_no, col.grid$collection_no)]	
+	list(grid.mat=grid.cells, grid.vec=grid.vec)
 }
 
 ######################################################################################################################################################
