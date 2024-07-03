@@ -35,12 +35,13 @@ fourClassesFromOccs_old <- function(occList, this.occs, restrict.col=NULL, restr
 }
 
 fourClassesFromOccs <- function(occList, occs.Meta.col = "occurrence_no", occs.Tax.col = "genus", 
-                                restrict.col=NULL, restrict.class=NULL) {
+                                restrict.col=NULL, restrict.class=NULL, restrict.tax=NULL) {
   
   taxList <- lapply(occList, function(x) { if (!is.null(x)) as.character(occs[occs[,occs.Meta.col] %in% x,occs.Tax.col]) else NA })	#gets the taxa in each (occurrence in each) interval
   taxVec <- unique(unlist(taxList))
   taxVec <- taxVec[taxVec !=""]
   if (!is.null(restrict.col) & !is.null(restrict.class)) taxVec <- taxVec[taxVec %in% occs[occs[,restrict.col] %in% restrict.class, occ.index]]
+  if (!is.null(restrict.tax)) taxVec <- taxVec[taxVec %in% restrict.tax]
   
   oList <- sapply(taxVec, function(x) { sapply(taxList, function(y) { x%in%y }) })										#converts taxa in each interval into a boolean
   oList <- apply(oList, 2, function(x) { x[which(x)[1]:which(x)[length(which(x))]]<-TRUE;x }) 											# makes range throughs complete
