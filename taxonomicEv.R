@@ -15,14 +15,14 @@ getFourClassesForOneTaxon<-function(x) {
 }
 cmp_GetFourClassesForOneTaxon <- cmpfun(getFourClassesForOneTaxon)
 
-fourClassesFromOccs <- function(occList, this.occs, restrict.col=NULL, restrict.class=NULL) {
+fourClassesFromOccs_old <- function(occList, this.occs, restrict.col=NULL, restrict.class=NULL) { #occList is repIntOccs
 	# for (i in 1:length(occList)) if (!is.null(occList[[i]])) as.character(occs[occs$occurrence_no%in%occList[[i]],]$taxon) else NA 
 	taxList <- lapply(occList, function(x) { if (!is.null(x)) as.character(occs$taxon[occs$occurrence_no %in% x]) else NA })	#gets the taxa in each (occurrence in each) interval
 	taxVec <- unique(unlist(taxList))
 	taxVec <- taxVec[taxVec !=""]
 	if (!is.null(restrict.col) & !is.null(restrict.class)) taxVec <- taxVec[taxVec %in% occs$taxon[occs[,restrict.col] %in% restrict.class]]
 	
-	tax_out <- taxVec[taxVec %in% occs$taxon[!(occs[,restrict.col] %in% restrict.class)]]
+	tax_out <- taxVec[taxVec %in% occs$taxon[!(occs[,restrict.col] %in% restrict.class)]] #this chunk of code seems useless as it not called below
 	tax_in <- taxVec[taxVec %in% occs$taxon[occs[,restrict.col] %in% restrict.class]]	
 	tax_in[tax_in %in% tax_out]
 	# occs[occs$taxon=="Aderidae",]	
@@ -32,6 +32,21 @@ fourClassesFromOccs <- function(occList, this.occs, restrict.col=NULL, restrict.
 	classMat <- array(dim=c(nrow(oList), 4, ncol(oList)), dimnames=list(NULL, c("Ft", "bt", "bL", "FL")))
 	for (i in seq_len(ncol(oList))) classMat[,,i] <- cmp_GetFourClassesForOneTaxon(oList[,i])
 	apply(classMat, c(1,2), sum)
+}
+
+fourClassesFromOccs <- function(occList, occs.Meta.col = "occurrence_no", occs.Tax.col = "genus", 
+                                restrict.col=NULL, restrict.class=NULL) {
+  
+  taxList <- lapply(occList, function(x) { if (!is.null(x)) as.character(occs[occs[,occs.Meta.col] %in% x,occs.Tax.col]) else NA })	#gets the taxa in each (occurrence in each) interval
+  taxVec <- unique(unlist(taxList))
+  taxVec <- taxVec[taxVec !=""]
+  if (!is.null(restrict.col) & !is.null(restrict.class)) taxVec <- taxVec[taxVec %in% occs[occs[,restrict.col] %in% restrict.class, occ.index]]
+  
+  oList <- sapply(taxVec, function(x) { sapply(taxList, function(y) { x%in%y }) })										#converts taxa in each interval into a boolean
+  oList <- apply(oList, 2, function(x) { x[which(x)[1]:which(x)[length(which(x))]]<-TRUE;x }) 											# makes range throughs complete
+  classMat <- array(dim=c(nrow(oList), 4, ncol(oList)), dimnames=list(NULL, c("Ft", "bt", "bL", "FL"))) # from Foote 2000; FL=confined to interval; bL=only bottom bound crossed; Ft=only top bound crossed; bt=both bound crossed
+  for (i in seq_len(ncol(oList))) classMat[,,i] <- cmp_GetFourClassesForOneTaxon(oList[,i])
+  apply(classMat, c(1,2), sum)
 }
 
 getRichnessBoxFromOccBox <- function (occBox, occs, method=c("RT", "SIB", "BC", "TT"), restrict.col=NULL, restrict.class=NULL, doNotSample=NULL, do.parallel=FALSE) {
