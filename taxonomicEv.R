@@ -4,12 +4,12 @@ require(compiler)
 getFourClassesForOneTaxon<-function(x) {
 	y<-array(FALSE, dim=c(base::length(x), 4), dimnames=list(NULL, c("Ft", "bt", "bL", "FL")))
 	if (sum(x)==0) { return(y)
-	} else if (sum(x)==1) { y[which(x),"FL"]<-TRUE
+	} else if (sum(x)==1) { y[which(x),"FL"]<-TRUE #singltons
 	} else {
 		intv <- which(x)
-		y[intv[1],"bL"] <- TRUE
-		y[intv[-c(1, base::length(intv))], "bt"] <- TRUE
-		y[intv[base::length(intv)],"Ft"] <- TRUE
+		y[intv[1],"bL"] <- TRUE #only bottom bound is crossed
+		y[intv[-c(1, base::length(intv))], "bt"] <- TRUE #ranges through both boundaries
+		y[intv[base::length(intv)],"Ft"] <- TRUE #only upper bound is crossed
 	}
 	y
 }
@@ -34,7 +34,7 @@ fourClassesFromOccs_old <- function(occList, this.occs, restrict.col=NULL, restr
 	apply(classMat, c(1,2), sum)
 }
 
-fourClassesFromOccs <- function(occList, occs.Meta.col = "occurrence_no", occs.Tax.col = "genus", 
+fourClassesFromOccs <- function(occList, func.output = "counts",occs.Meta.col = "occurrence_no", occs.Tax.col = "genus", 
                                 restrict.col=NULL, restrict.class=NULL, restrict.tax=NULL) {
   
   taxList <- lapply(occList, function(x) { if (!is.null(x)) as.character(occs[occs[,occs.Meta.col] %in% x,occs.Tax.col]) else NA })	#gets the taxa in each (occurrence in each) interval
@@ -47,7 +47,13 @@ fourClassesFromOccs <- function(occList, occs.Meta.col = "occurrence_no", occs.T
   oList <- apply(oList, 2, function(x) { x[which(x)[1]:which(x)[length(which(x))]]<-TRUE;x }) 											# makes range throughs complete
   classMat <- array(dim=c(nrow(oList), 4, ncol(oList)), dimnames=list(NULL, c("Ft", "bt", "bL", "FL"))) # from Foote 2000; FL=confined to interval; bL=only bottom bound crossed; Ft=only top bound crossed; bt=both bound crossed
   for (i in seq_len(ncol(oList))) classMat[,,i] <- cmp_GetFourClassesForOneTaxon(oList[,i])
-  apply(classMat, c(1,2), sum)
+  
+  if(func.output == "counts") return(apply(classMat, c(1,2), sum))
+  if(func.output == "TaxList")
+  {
+    dimnames(classMat) <- list(NULL, c("Ft", "bt", "bL", "FL"), colnames(oList))
+    return(classMat)
+  }
 }
 
 getRichnessBoxFromOccBox <- function (occBox, occs, method=c("RT", "SIB", "BC", "TT"), restrict.col=NULL, restrict.class=NULL, doNotSample=NULL, do.parallel=FALSE) {
