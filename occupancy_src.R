@@ -55,24 +55,62 @@ getMPWDColsOneRep <- function(this.rep, this.grid.mat) {
 ##### functions to calculate occupancy (as k/n)
 ######################################################################################################################################################
 
-getOccupancyOneInterval <- function(this.intv, site.type=match("PBDB", "NOW", "grid"), bigList=NULL) {
+getOccupancyOneInterval <- function(this.intv, 
+                                    site.type=match("PBDB", "NOW", "grid"), 
+                                    grid.cell.name =NULL, 
+                                    bigList=NULL,
+                                    getOccupancyFor = match("taxon", "bodyMass","wholeGuild"),
+                                    size.categ=NULL, 
+                                    measure.mat = NULL) 
+  {
 	if (settings$this.rank %in% names(occs)) tax.label <- settings$this.rank else tax.label <- "accepted_name"
 	if (site.type=="NOW") { col.label <- "NOW_loc" 
 	} else if (site.type=="PBDB") { col.label <- "collection_no"
-	} else if (site.type=="grid") col.label <- "grid.cell"
-
+	} else if (site.type=="grid") {
+	  if(is.null(grid.cell.name)) {col.label <- "grid.cell"
+	  } else {col.label <- grid.cell.name}
+	}
+	
 	tax.vec <- sort(unique(occs[occs$occurrence_no %in% this.intv & occs$accepted_rank %in% rank.vec[1:which(rank.vec==settings$this.rank)], tax.label]))
 	if (!is.null(bigList)) tax.vec <- tax.vec[tax.vec  %in% bigList[ , tax.label]]
 	if (length(tax.vec) < 1) return(NA)
+	
+	if(getOccupancyFor == "wholeGuild")
+	{
+  	nfinds.vec <- length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label]%in% tax.vec, col.label]))
+  	names(nfinds.vec) <- getOccupancyFor
+  } else if(getOccupancyFor == "bodyMass") {
+  	if(is.null(measure.mat)) {
+  	  print("A data frame with species body mass estimates is required.")
+  	  return(NA)
+  	} else {
+  	  if(settings$this.rank == "species") {
+  	    intSizeCat <- measure.mat
+  	  } else {
+  	    intSizeCat <- getIntMeasure.mat(measure.mat = measure.mat, 
+  	                                    breaks = settings$bmBreaks_herb, 
+  	                                    uniqIntTaxa = tax.vec)
+  	  }
+  	}
+  	nfinds.vec <- sapply(seq_len(length(size.categ)), function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label] %in% rownames(intSizeCat[intSizeCat$SizeCat == x,]), col.label])))
+  	names(nfinds.vec) <- size.categ
+	} else {
+	  nfinds.vec <- sapply(tax.vec, function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label]==x, col.label])))
+	  names(nfinds.vec) <- tax.vec
+	}
 
-	nfinds.vec <- sapply(tax.vec, function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label]==x, col.label])))
-	names(nfinds.vec) <- tax.vec
 	ncols.total <- length(unique(occs[occs$occurrence_no %in% this.intv, col.label]))
 	list(occupancy=nfinds.vec/ncols.total, n.finds=nfinds.vec, ncols.tot=ncols.total)
 }
 
-getOccupancyOneRep <- function(this.rep, site.type=match("PBDB", "NOW", "grid"), bigList=NULL) {
-	lapply(this.rep, getOccupancyOneInterval, site.type=site.type, bigList=bigList)
+getOccupancyOneRep <- function(this.rep, site.type=match("PBDB", "NOW", "grid"), 
+                               grid.cell.name =NULL, 
+                               bigList=NULL,
+                               getOccupancyFor = match("taxon", "bodyMass","wholeGuild"),
+                               size.categ=NULL, 
+                               measure.mat = NULL) 
+{
+	lapply(this.rep, getOccupancyOneInterval, site.type=site.type, bigList=bigList, getOccupancyFor = getOccupancyFor, size.categ=size.categ, measure.mat = measure.mat)
 }
 
 ######################################################################################################################################################
