@@ -57,7 +57,7 @@ getMPWDColsOneRep <- function(this.rep, this.grid.mat) {
 
 getOccupancyOneInterval <- function(this.intv, 
                                     site.type=match("PBDB", "NOW", "grid"), 
-                                    grid.cell.name =NULL, 
+                                    grid.cell.name = NULL, 
                                     bigList=NULL,
                                     getOccupancyFor = match("taxon", "bodyMass","wholeGuild"),
                                     size.categ=NULL, 
@@ -92,15 +92,20 @@ getOccupancyOneInterval <- function(this.intv,
   	                                    uniqIntTaxa = tax.vec)
   	  }
   	}
-  	nfinds.vec <- sapply(seq_len(length(size.categ)), function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label] %in% rownames(intSizeCat[intSizeCat$SizeCat == x,]), col.label])))
+  	nfinds.vec <- sapply(seq_len(length(size.categ)), 
+  	                     function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label] %in% rownames(intSizeCat[intSizeCat$SizeCat == x,]), col.label])))
   	names(nfinds.vec) <- size.categ
-	} else {
+  	
+	} else if(getOccupancyFor == "taxon") {
 	  nfinds.vec <- sapply(tax.vec, function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label]==x, col.label])))
 	  names(nfinds.vec) <- tax.vec
 	}
-
+	
 	ncols.total <- length(unique(occs[occs$occurrence_no %in% this.intv, col.label]))
-	list(occupancy=nfinds.vec/ncols.total, n.finds=nfinds.vec, ncols.tot=ncols.total)
+	if(getOccupancyFor == "bodyMass") {
+	  list(occupancy=nfinds.vec/ncols.total, n.finds=nfinds.vec, ncols.tot=ncols.total, int.measure.mat = intSizeCat)
+	} else { list(occupancy=nfinds.vec/ncols.total, n.finds=nfinds.vec, ncols.tot=ncols.total)
+	}
 }
 
 getOccupancyOneRep <- function(this.rep, site.type=match("PBDB", "NOW", "grid"), 
@@ -110,7 +115,7 @@ getOccupancyOneRep <- function(this.rep, site.type=match("PBDB", "NOW", "grid"),
                                size.categ=NULL, 
                                measure.mat = NULL) 
 {
-	lapply(this.rep, getOccupancyOneInterval, site.type=site.type, bigList=bigList, getOccupancyFor = getOccupancyFor, size.categ=size.categ, measure.mat = measure.mat)
+	lapply(this.rep, getOccupancyOneInterval, site.type=site.type, grid.cell.name = grid.cell.name, bigList=bigList, getOccupancyFor = getOccupancyFor, size.categ=size.categ, measure.mat = measure.mat)
 }
 
 ######################################################################################################################################################
