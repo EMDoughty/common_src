@@ -63,7 +63,9 @@ getOccupancyOneInterval <- function(this.intv,
                                     size.categ=NULL, 
                                     measure.mat = NULL) 
   {
-	if (settings$this.rank %in% names(occs)) tax.label <- settings$this.rank else tax.label <- "accepted_name"
+	if (settings$this.rank %in% names(occs)) 
+	{occs.tax.label <- meas.tax.label <- settings$this.rank } else { occs.tax.label <- "accepted_name"
+	  meas.tax.label <- "taxon"}
 	if (site.type=="NOW") { col.label <- "NOW_loc" 
 	} else if (site.type=="PBDB") { col.label <- "collection_no"
 	} else if (site.type=="grid") {
@@ -71,13 +73,13 @@ getOccupancyOneInterval <- function(this.intv,
 	  } else {col.label <- grid.cell.name}
 	}
 	
-	tax.vec <- sort(unique(occs[occs$occurrence_no %in% this.intv & occs$accepted_rank %in% rank.vec[1:which(rank.vec==settings$this.rank)], tax.label]))
-	if (!is.null(bigList)) tax.vec <- tax.vec[tax.vec  %in% bigList[ , tax.label]]
+	tax.vec <- sort(unique(occs[occs$occurrence_no %in% this.intv & occs$accepted_rank %in% rank.vec[1:which(rank.vec==settings$this.rank)], occs.tax.label]))
+	if (!is.null(bigList)) tax.vec <- tax.vec[tax.vec  %in% bigList[ , occs.tax.label]]
 	if (length(tax.vec) < 1) return(NA)
 	
 	if(getOccupancyFor == "wholeGuild")
 	{
-  	nfinds.vec <- length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label]%in% tax.vec, col.label]))
+  	nfinds.vec <- length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,occs.tax.label]%in% tax.vec, col.label]))
   	names(nfinds.vec) <- getOccupancyFor
   } else if(getOccupancyFor == "bodyMass") {
   	if(is.null(measure.mat)) {
@@ -96,11 +98,11 @@ getOccupancyOneInterval <- function(this.intv,
   	  #}
   	}
   	nfinds.vec <- sapply(seq_len(length(size.categ)), 
-  	                     function(oneSize) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label] %in% tax.vec[tax.vec %in% intSizeCat[intSizeCat$SizeCat == oneSize,tax.label]], col.label])))
+  	                     function(oneSize) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,occs.tax.label] %in% tax.vec[tax.vec %in% intSizeCat[intSizeCat$SizeCat == oneSize, meas.tax.label]], col.label])))
   	names(nfinds.vec) <- size.categ
   	
 	} else if(getOccupancyFor == "taxon") {
-	  nfinds.vec <- sapply(tax.vec, function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,tax.label]==x, col.label])))
+	  nfinds.vec <- sapply(tax.vec, function(x) length(unique(occs[occs$occurrence_no %in% this.intv & occs[ ,occs.tax.label]==x, col.label])))
 	  names(nfinds.vec) <- tax.vec
 	}
 	
