@@ -218,7 +218,8 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
                                 add.legend = TRUE, prop.ylab = FALSE,
                                 numbers.only = FALSE, overlay.labels = FALSE, overlay.labels.col = "white", overlay.labels.cex = 0.5, #overlay.labels.coords = NULL,
                                 oldCZoverlay = TRUE, overlay.CZ.color = TRUE, do.subepochs = FALSE, thisAlpha.text = 0.33, thisAlpha.intervals = 0.33, borderCol = "white", invertTime = FALSE, scale.cex = 0.75, scale.headers = 0.95, text.offset = 0.025,
-                                CZnew_include.intervals = c("period","epoch","stage")) 
+                                CZnew_include.intervals = c("period","epoch","stage"),
+                                CZoverlaySrc = NA) 
 {
   # this.box <-this.box[,order(this.box[nrow(this.box)-1,], decreasing=TRUE)]
   # this.box <-this.box[,order(colMeans(this.box, na.rm=TRUE))]
@@ -261,10 +262,20 @@ plotStackedRichness <- function(this.box, intervals, reorder.taxa = TRUE, do.log
   
   if(oldCZoverlay)
   {
-    source("~/Dropbox/Code/R/common_src/CzTimescale.R")
+    if(is.na(CZoverlaySrc)) 
+    {
+      source("~/Dropbox/Code/R/common_src/CzTimescale.R") 
+    } else {
+      source(CZoverlaySrc)
+    }
     overlayCzTimescale(do.subepochs=do.subepochs, color = overlay.CZ.color, thisAlpha.text = thisAlpha.text, thisAlpha.intervals = thisAlpha.intervals, borderCol = borderCol, invertTime = invertTime, scale.cex = scale.cex, scale.headers = scale.headers, text.offset = text.offset)
   } else {
-    source("~/Dropbox/Code/R/Scripts_Source Sent by Jon/CzTimescale.R")
+    if(is.na(CZoverlaySrc)) 
+    {
+      source("~/Dropbox/Code/R/Scripts_Source Sent by Jon/CzTimescale.R")
+    } else {
+    source(CZoverlaySrc)
+    }
     overlayCzTimescale(include.intervals = CZnew_include.intervals)
   }
   
